@@ -1,32 +1,10 @@
-// Firebase configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyAazcXm2VanSKjRT_D89PwJL8qrNdKkP8E",
-  authDomain: "shared-tracker-cad14.firebaseapp.com",
-  databaseURL: "https://shared-tracker-cad14-default-rtdb.asia-southeast1.firebasedatabase.app/",
-  projectId: "shared-tracker-cad14",
-  storageBucket: "shared-tracker-cad14.firebasestorage.app",
-  messagingSenderId: "936982330005",
-  appId: "1:936982330005:web:e18e5ebee26816325f399c",
-  measurementId: "G-QVDG6B2V5Q"
-};
-
-firebase.initializeApp(firebaseConfig);
+// Your web app's Firebase configuration
 const database = firebase.database();
-
-// Initialize Firebase Auth
-const auth = firebase.auth();
-
-// Sign in anonymously
-auth.signInAnonymously()
-  .catch((error) => {
-    console.error('Auth error:', error);
-    alert('Failed to connect to database');
-  });
 
 // Set up listener after authentication
 auth.onAuthStateChanged((user) => {
   if (user) {
-    console.log('Authenticated!');
+    console.log('Authenticated as:', user.email);
     // Set up Firebase listener
     database.ref('transactions').on('value', (snapshot) => {
       const transactions = snapshot.val();
@@ -34,8 +12,6 @@ auth.onAuthStateChanged((user) => {
       renderTransactionsByType(transactions);
       updateSummary(transactions);
     });
-  } else {
-    console.log('Not authenticated');
   }
 });
 
@@ -344,3 +320,12 @@ function deleteTransaction(id) {
       .catch(error => console.error('Error deleting:', error));
   }
 }
+
+// Logout functionality
+document.getElementById('logoutBtn')?.addEventListener('click', () => {
+    if (confirm('Are you sure you want to logout?')) {
+        auth.signOut().then(() => {
+            window.location.href = 'login.html';
+        });
+    }
+});

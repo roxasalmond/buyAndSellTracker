@@ -3,29 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Expense Tracker</title>
+    <title>Login - Tracker</title>
     <link rel="stylesheet" href="login.css">
 </head>
 <body>
     <div class="login-container">
-        <h1>🔐 Login</h1>
+        <h1>Expense <span>Tracker</span></h1>
+        <p class="subtitle">Enter your email to receive a sign-in link</p>
+
+        <div id="errorMessage" class="message error-message"></div>
+        <div id="successMessage" class="message success-message"></div>
+
         <form id="loginForm">
             <div class="form-group">
-                <label for="username">Username</label>
-                <input type="text" id="username" name="username" required>
+                <label for="email">Email Address</label>
+                <input type="email" id="email" required autocomplete="email" placeholder="your@email.com">
             </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" required>
-            </div>
-            <button type="submit">Login</button>
-            <p class="error-message" id="errorMessage">Invalid username or password</p>
+
+            <button type="submit" class="login-btn" id="loginBtn">Send Sign-In Link</button>
         </form>
+
+        <div class="allowed-emails">
+            <h3>Authorized Users Only</h3>
+            <ul>
+                <li>• You must be pre-authorized</li>
+                <li>• Check your email for the sign-in link</li>
+                <li>• Link expires in 1 hour</li>
+            </ul>
+        </div>
     </div>
 
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>    
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="login.js"></script>
 </body>
 </html>

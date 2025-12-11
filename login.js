@@ -1,82 +1,95 @@
-console.log('login.js loaded');
-console.log('Firebase app exists?', typeof firebase !== 'undefined');
+// Firebase configuration
+const firebaseConfig = {
+    apiKey: "AIzaSyAazcXm2VanSKjRT_D89PwJL8qrNdKkP8E",
+    authDomain: "shared-tracker-cad14.firebaseapp.com",
+    databaseURL: "https://shared-tracker-cad14-default-rtdb.asia-southeast1.firebasedatabase.app/",
+    projectId: "shared-tracker-cad14",
+    storageBucket: "shared-tracker-cad14.firebasestorage.app",
+    messagingSenderId: "936982330005",
+    appId: "1:936982330005:web:e18e5ebee26816325f399c",
+    measurementId: "G-QVDG6B2V5Q"
+};
 
-// Wait a bit for Firebase to fully load
-setTimeout(() => {
-    console.log('Initializing Firebase...');
-    
-    // Firebase configuration
-    const firebaseConfig = {
-      apiKey: "AIzaSyAazcXm2VanSKjRT_D89PwJL8qrNdKkP8E",
-      authDomain: "shared-tracker-cad14.firebaseapp.com",
-      databaseURL: "https://shared-tracker-cad14-default-rtdb.asia-southeast1.firebasedatabase.app",
-      projectId: "shared-tracker-cad14",
-      storageBucket: "shared-tracker-cad14.firebasestorage.app",
-      messagingSenderId: "936982330005",
-      appId: "1:936982330005:web:e18e5ebee26816325f399c",
-      measurementId: "G-QVDG6B2V5Q"
-    };
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
 
-    // Check if already initialized
-    if (!firebase.apps.length) {
-        firebase.initializeApp(firebaseConfig);
-        console.log('Firebase initialized');
-    } else {
-        console.log('Firebase already initialized');
+const loginForm = document.getElementById('loginForm');
+const loginBtn = document.getElementById('loginBtn');
+const errorMessage = document.getElementById('errorMessage');
+const successMessage = document.getElementById('successMessage');
+
+// Action code settings for email link
+const actionCodeSettings = {
+    url: 'https://roxasalmond.github.io/buyAndSellTracker/index.html',
+    handleCodeInApp: true
+};
+
+// Check if user is already signed in
+auth.onAuthStateChanged((user) => {
+    if (user) {
+        window.location.href = 'index.html';
     }
+});
 
-    const database = firebase.database();
-    console.log('Database reference created');
-
-    // Test connection
-    console.log('Testing database connection...');
-    database.ref('users').once('value')
-        .then((snapshot) => {
-            console.log('SUCCESS! Users data:', snapshot.val());
+// Check if redirected from email link
+if (auth.isSignInWithEmailLink(window.location.href)) {
+    let email = window.localStorage.getItem('emailForSignIn');
+    if (!email) {
+        email = window.prompt('Please provide your email for confirmation');
+    }
+    
+    auth.signInWithEmailLink(email, window.location.href)
+        .then(() => {
+            window.localStorage.removeItem('emailForSignIn');
+            window.location.href = 'index.html';
         })
         .catch((error) => {
-            console.error('ERROR reading users:', error);
+            console.error('Error signing in:', error);
+            errorMessage.textContent = 'Invalid or expired link. Please request a new one.';
+            errorMessage.classList.add('show');
         });
+}
 
-    // Handle login form
-    document.getElementById('loginForm').addEventListener('submit', function(e) {
-        e.preventDefault();
+// Send email link
+loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const email = document.getElementById('email').value;
+    
+    loginBtn.disabled = true;
+    loginBtn.textContent = 'Sending...';
+    errorMessage.classList.remove('show');
+    successMessage.classList.remove('show');
+
+    try {
+        await auth.sendSignInLinkToEmail(email, actionCodeSettings);
+        window.localStorage.setItem('emailForSignIn', email);
         
-        const username = document.getElementById('username').value;
-        const password = document.getElementById('password').value;
+        successMessage.textContent = `Sign-in link sent to ${email}! Check your inbox.`;
+        successMessage.classList.add('show');
+        loginBtn.textContent = 'Link Sent ✓';
         
-        console.log('Login attempt:', username);
+        // Reset form after 3 seconds
+        setTimeout(() => {
+            loginBtn.disabled = false;
+            loginBtn.textContent = 'Send Sign-In Link';
+            successMessage.classList.remove('show');
+            loginForm.reset();
+        }, 3000);
         
-        database.ref('users').once('value')
-            .then((snapshot) => {
-                const users = snapshot.val();
-                console.log('Login - users data:', users);
-                
-                if (!users) {
-                    alert('Cannot read users from database');
-                    return;
-                }
-                
-                // Check each user
-                for (let userId in users) {
-                    const user = users[userId];
-                    if (user.username === username && user.password === password) {
-                        console.log('Login successful!');
-                        localStorage.setItem('currentUser', JSON.stringify({
-                            id: userId,
-                            username: user.username
-                        }));
-                        window.location.href = 'index.html';
-                        return;
-                    }
-                }
-                
-                // No match
-                document.getElementById('errorMessage').style.display = 'block';
-            })
-            .catch((error) => {
-                console.error('Login error:', error);
-                alert('Error: ' + error.message);
-            });
-    });
-}, 1000); // Wait 1 second for Firebase to load
+    } catch (error) {
+        console.error('Error sending email:', error);
+        
+        if (error.code === 'auth/invalid-email') {
+            errorMessage.textContent = 'Invalid email address.';
+        } else if (error.code === 'auth/unauthorized-continue-uri') {
+            errorMessage.textContent = 'Configuration error. Contact admin.';
+        } else {
+            errorMessage.textContent = 'This email is not authorized. Contact admin to get access.';
+        }
+        
+        errorMessage.classList.add('show');
+        loginBtn.disabled = false;
+        loginBtn.textContent = 'Send Sign-In Link';
+    }
+});
