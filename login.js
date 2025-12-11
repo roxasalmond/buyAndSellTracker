@@ -20,16 +20,19 @@ const errorMessage = document.getElementById('errorMessage');
 // Check if user is already signed in
 auth.onAuthStateChanged((user) => {
     if (user) {
+        console.log('Already signed in, redirecting to index...');
         window.location.href = 'index.html';
     }
 });
 
-// Handle login
+// Handle login form submission
 loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
+    
+    console.log('Attempting login for:', email);
     
     loginBtn.disabled = true;
     loginBtn.textContent = 'Signing in...';
@@ -37,6 +40,7 @@ loginForm.addEventListener('submit', async (e) => {
 
     try {
         await auth.signInWithEmailAndPassword(email, password);
+        console.log('Login successful!');
         // Redirect happens automatically via onAuthStateChanged
     } catch (error) {
         console.error('Login error:', error);
