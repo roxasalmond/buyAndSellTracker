@@ -18,36 +18,44 @@ const loginBtn = document.getElementById('loginBtn');
 const errorMessage = document.getElementById('errorMessage');
 const successMessage = document.getElementById('successMessage');
 
-// Action code settings for email link
+// Action code settings for email link - MUST GO TO login.html
 const actionCodeSettings = {
-    url: 'https://roxasalmond.github.io/buyAndSellTracker/index.html',
+    url: 'https://roxasalmond.github.io/buyAndSellTracker/login.html',
     handleCodeInApp: true
 };
 
-// Check if user is already signed in
-auth.onAuthStateChanged((user) => {
-    if (user) {
-        window.location.href = 'index.html';
-    }
-});
-
 // Check if redirected from email link
 if (auth.isSignInWithEmailLink(window.location.href)) {
+    console.log('Detected email link sign-in');
+    
     let email = window.localStorage.getItem('emailForSignIn');
+    
     if (!email) {
         email = window.prompt('Please provide your email for confirmation');
     }
     
-    auth.signInWithEmailLink(email, window.location.href)
-        .then(() => {
-            window.localStorage.removeItem('emailForSignIn');
+    if (email) {
+        auth.signInWithEmailLink(email, window.location.href)
+            .then((result) => {
+                console.log('Sign-in successful!', result.user.email);
+                window.localStorage.removeItem('emailForSignIn');
+                // Redirect to main page
+                window.location.href = 'index.html';
+            })
+            .catch((error) => {
+                console.error('Error signing in:', error);
+                errorMessage.textContent = 'Invalid or expired link. Please request a new one.';
+                errorMessage.classList.add('show');
+            });
+    }
+} else {
+    // Check if user is already signed in
+    auth.onAuthStateChanged((user) => {
+        if (user) {
+            console.log('Already signed in, redirecting...');
             window.location.href = 'index.html';
-        })
-        .catch((error) => {
-            console.error('Error signing in:', error);
-            errorMessage.textContent = 'Invalid or expired link. Please request a new one.';
-            errorMessage.classList.add('show');
-        });
+        }
+    });
 }
 
 // Send email link
@@ -85,7 +93,7 @@ loginForm.addEventListener('submit', async (e) => {
         } else if (error.code === 'auth/unauthorized-continue-uri') {
             errorMessage.textContent = 'Configuration error. Contact admin.';
         } else {
-            errorMessage.textContent = 'This email is not authorized. Contact admin to get access.';
+            errorMessage.textContent = 'Error sending link. Please try again.';
         }
         
         errorMessage.classList.add('show');
