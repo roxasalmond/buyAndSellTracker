@@ -106,31 +106,3 @@ input:focus {
     background-color: #ff4444;
     color: white;
 }
-
-.success-message {
-    background-color: #9EFF00;
-    color: #000000;
-}
-
-.allowed-emails {
-    background-color: #1a1a1a;
-    padding: 15px;
-    border-radius: 8px;
-    margin-top: 20px;
-    font-size: 13px;
-}
-
-.allowed-emails h3 {
-    color: #9EFF00;
-    font-size: 14px;
-    margin-bottom: 10px;
-}
-
-.allowed-emails ul {
-    list-style: none;
-    color: #888888;
-}
-
-.allowed-emails li {
-    padding: 5px 0;
-}

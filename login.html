@@ -9,10 +9,9 @@
 <body>
     <div class="login-container">
         <h1>Expense <span>Tracker</span></h1>
-        <p class="subtitle">Enter your email to receive a sign-in link</p>
+        <p class="subtitle">Sign in to access your tracker</p>
 
         <div id="errorMessage" class="message error-message"></div>
-        <div id="successMessage" class="message success-message"></div>
 
         <form id="loginForm">
             <div class="form-group">
@@ -20,17 +19,13 @@
                 <input type="email" id="email" required autocomplete="email" placeholder="your@email.com">
             </div>
 
-            <button type="submit" class="login-btn" id="loginBtn">Send Sign-In Link</button>
-        </form>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" required autocomplete="current-password" placeholder="Enter password">
+            </div>
 
-        <div class="allowed-emails">
-            <h3>Authorized Users Only</h3>
-            <ul>
-                <li>• You must be pre-authorized</li>
-                <li>• Check your email for the sign-in link</li>
-                <li>• Link expires in 1 hour</li>
-            </ul>
-        </div>
+            <button type="submit" class="login-btn" id="loginBtn">Sign In</button>
+        </form>
     </div>
 
     <!-- Firebase SDK -->
