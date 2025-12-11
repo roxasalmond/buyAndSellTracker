@@ -1,0 +1,504 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background-color: #0a0a0a;
+    color: #ffffff;
+}
+
+.main-container {
+    display: flex;
+    gap: 20px;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+/* Sidebar Styles */
+.sidebar {
+    width: 390px;
+    background-color: #111111;
+    padding: 16px;
+    border-right: 1px solid #222222;
+    overflow-y: auto;
+}
+
+.header {
+    margin-bottom: 40px;
+}
+
+.logo {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 15px;
+}
+
+.logo img {
+    width: 100%;
+    height: 100%;
+}
+
+.title {
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.title span {
+    color: #9EFF00;
+}
+
+/* Balance Summary */
+.balance-summary {
+    background-color: #1a1a1a;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+}
+
+.balance-summary .title h3 {
+    font-size: 18px;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+.balance-summary .label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    color: #888888;
+    margin-bottom: 15px;
+}
+
+.balance-summary .label:last-child {
+    margin-bottom: 0;
+}
+
+.total-value,
+.total-fund {
+    font-size: 20px;
+    font-weight: 700;
+    color: #9EFF00;
+}
+
+/* Income Summary */
+.income-summary {
+    background-color: #1a1a1a;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.income-summary > div {
+    flex: 1;
+}
+
+.income-summary .label {
+    font-size: 12px;
+    color: #888888;
+    margin-bottom: 8px;
+}
+
+.income-amount {
+    font-size: 18px;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+/* Add Unit Section */
+.add-unit h3 {
+    font-size: 18px;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+/* Form Type Selector */
+.form-type-selector {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+.form-btn {
+    flex: 1;
+    padding: 10px 15px;
+    background-color: #1a1a1a;
+    color: #888888;
+    border: 1px solid #222222;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.form-btn:hover {
+    background-color: #222222;
+    color: #ffffff;
+}
+
+.form-btn.active {
+    background-color: #9EFF00;
+    color: #000000;
+    border-color: #9EFF00;
+    font-weight: 600;
+}
+
+/* Form Sections */
+.form-section {
+    display: none;
+}
+
+.form-section.active {
+    display: block;
+}
+
+/* Form inputs inside form sections */
+.form-section form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.form-section input[type="text"],
+.form-section input[type="date"],
+.form-section input[type="number"] {
+    width: 100%;
+    padding: 12px 15px;
+    background-color: #1a1a1a;
+    border: 1px solid #222222;
+    border-radius: 8px;
+    color: #ffffff;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+}
+
+.form-section input:focus {
+    outline: none;
+    border-color: #9EFF00;
+}
+
+.form-section input::placeholder {
+    color: #555555;
+}
+
+.form-section button[type="submit"] {
+    width: 100%;
+    padding: 14px;
+    background-color: #9EFF00;
+    color: #000000;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 5px;
+}
+
+.form-section button[type="submit"]:hover {
+    background-color: #8ee600;
+    transform: translateY(-2px);
+}
+
+.form-section button[type="submit"]:active {
+    transform: translateY(0);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 13px;
+    color: #888888;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.form-group input[type="text"],
+.form-group input[type="date"],
+.form-group select {
+    width: 100%;
+    padding: 12px 15px;
+    background-color: #1a1a1a;
+    border: 1px solid #222222;
+    border-radius: 8px;
+    color: #ffffff;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="date"]:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #9EFF00;
+}
+
+.form-group input::placeholder {
+    color: #555555;
+}
+
+.form-group select {
+    cursor: pointer;
+}
+
+.form-group select option {
+    background-color: #1a1a1a;
+    color: #ffffff;
+}
+
+.add-btn {
+    width: 100%;
+    padding: 14px;
+    background-color: #9EFF00;
+    color: #000000;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+}
+
+.add-btn:hover {
+    background-color: #8ee600;
+    transform: translateY(-2px);
+}
+
+.add-btn:active {
+    transform: translateY(0);
+}
+
+/* Transaction History Tabs */
+
+.main-content {
+    flex: 1;
+    padding: 40px;
+}
+.history-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 12px;
+    border-bottom: 2px solid #1a1a1a;
+}
+
+.transaction-table {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+
+.transaction-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.transaction-table tr {
+    display: grid;
+    grid-template-columns: 2fr 1.5fr 1.5fr 1.5fr 1.5fr 1.2fr 1.5fr;
+    gap: 10px;
+}
+
+.transaction-table th,
+.transaction-table td {
+    padding: 8px 12px;
+    text-align: left;
+}
+
+.history-tab-btn {
+    padding: 12px 24px;
+    background-color: transparent;
+    color: #888888;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    margin-bottom: -2px;
+}
+
+.history-tab-btn:hover {
+    color: #ffffff;
+}
+
+.history-tab-btn.active {
+    color: #9EFF00;
+    border-bottom-color: #9EFF00;
+    font-weight: 600;
+}
+
+.history-tab-content {
+    display: none;
+}
+
+.history-tab-content.active {
+    display: block;
+}
+
+/* Adjust table for different content types */
+#fundsTableBody td,
+#remitsTableBody td {
+    font-weight: 500;
+}
+
+.income {
+    color: #9EFF00;
+}
+
+.expense {
+    color: #ff4444;
+}
+
+/* Sold input field */
+.sold-input {
+    width: 100px;
+    padding: 6px 10px;
+    background-color: #1a1a1a;
+    border: 1px solid #222222;
+    border-radius: 6px;
+    color: #ffffff;
+    font-size: 13px;
+}
+
+.sold-input:focus {
+    outline: none;
+    border-color: #9EFF00;
+}
+
+.sell-btn {
+    padding: 6px 12px;
+    background-color: #9EFF00;
+    color: #000000;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.sell-btn:hover {
+    background-color: #8ee600;
+}
+
+.status-badge {
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.status-in-stock {
+    background-color: #1a1a1a;
+    color: #888888;
+}
+
+.status-sold {
+    background-color: #9EFF00;
+    color: #000000;
+}
+
+/* Responsive Design */
+/* Responsive Design */
+@media (max-width: 1024px) {
+    
+    .main-content {
+        padding: 30px;
+    }
+}
+
+@media (max-width: 768px) {
+    .main-container {
+        flex-direction: column;
+    }
+    
+    .sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #222222;
+    }
+    
+    .main-content {
+        padding: 10px;
+    }
+    
+    .form-type-selector {
+        flex-direction: column;
+    }
+    
+    .income-summary {
+        flex-direction: column;
+    }
+    
+    /* Mobile Table - Card Layout */
+    .transaction-table {
+        display: block;
+    }
+    
+    .transaction-table thead {
+        display: none; /* Hide headers on mobile */
+    }
+    
+    .transaction-table tbody {
+        display: block;
+    }
+    
+    .transaction-table tr {
+        display: block;
+        background-color: #1a1a1a;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        padding: 15px;
+    }
+    
+    .transaction-table td {
+        display: flex;
+        /* justify-content: space-between; */
+        padding: 8px 0;
+        border-bottom: 1px solid #222222;
+        text-align: left;
+        font-size: 14px;
+    }
+    
+    .transaction-table td:last-child {
+        border-bottom: none;
+    }
+    
+    /* Add labels before each data item */
+    .transaction-table td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: #888888;
+        margin-right: 10px;
+    }
+}
+
+/* Scrollbar Styles */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #111111;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #333333;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #444444;
+}

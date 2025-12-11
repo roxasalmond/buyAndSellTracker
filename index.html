@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="description" content="That's how you use JavaScript!" />
+        <title>Tracker</title>
+        <link rel="stylesheet" href="styles.css" />
+    </head>
+
+    <body>
+        <div class="main-container">
+            <div class="sidebar">
+                <div class="header">
+                    <div class="logo">
+                        <!-- <img src="./images/favicon.png" /> -->
+                    </div>
+                    <h1 id="expense_tracker" class="title">
+                        Expense <span>Tracker</span>
+                    </h1>
+                </div>
+
+                <div class="balance-summary">
+                    <div class="title">
+                        <h3>Balance Summary</h3>
+                    </div>
+                    <div class="label">
+                        <span>Total Inventory Value</span>
+                        <div class="total-value" id="totalValue">₱0.00</div>
+                    </div>
+                    <div class="label">
+                        <span>Available Fund</span>
+                        <div class="total-fund" id="totalFund">₱0.00</div>
+                    </div>
+                </div>
+                
+                <div class="income-summary">                     
+                    <div> 
+                        <div class="label">Total Income</div>
+                        <div class="income-amount" id="totalIncome">₱0.00</div> 
+                    </div>                           
+                    <div>
+                        <div class="label">Divided income</div>
+                        <div class="income-amount" id="totalDivided">₱0.00</div>
+                    </div>                                          
+                </div>
+
+                <div class="add-unit">
+                    <h3>Add New Entry</h3>
+                    <!-- Form Type Selector (buttons/tabs) -->
+                    <div class="form-type-selector">
+                        <button type="button" class="form-btn active" data-form="unit">
+                            Add Unit
+                        </button>
+                        <button type="button" class="form-btn" data-form="fund">
+                            Add Fund
+                        </button>
+                        <button type="button" class="form-btn" data-form="remit">
+                            Remit
+                        </button>
+                    </div>
+
+                    <!-- Unit Form -->
+                    <div id="unitFormSection" class="form-section active">
+                        <form id="unitForm">
+                            <input type="text" id="unitName" placeholder="Unit Name" required />
+                            <input type="text" id="unitCondition" placeholder="Condition" required />
+                            <input type="date" id="unitDate" required />
+                            <input type="number" id="unitAmount" placeholder="Cost" step="0.01" required />
+                            <button type="submit">Add Unit</button>
+                        </form>
+                    </div>
+
+                    <!-- Fund Form -->
+                    <div id="fundFormSection" class="form-section">
+                        <form id="fundForm">
+                            <input type="date" id="fundDate" required />
+                            <input type="number" id="fundAmount" placeholder="Amount" step="0.01" required />
+                            <button type="submit">Add Fund</button>
+                        </form>
+                    </div>
+
+                    <!-- Remit Form -->
+                    <div id="remitFormSection" class="form-section">
+                        <form id="remitForm">
+                            <input type="date" id="remitDate" required />
+                            <input type="number" id="remitAmount" placeholder="Amount" step="0.01" required />
+                            <button type="submit">Record Remittance</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="main-content">
+                <div class="transaction-history">
+                    <h2>Transaction History</h2>
+                    
+                    <!-- History Tab Buttons -->
+                    <div class="history-tabs">
+                        <button type="button" class="history-tab-btn active" data-tab="units">
+                            Units
+                        </button>
+                        <button type="button" class="history-tab-btn" data-tab="funds">
+                            Funds
+                        </button>
+                        <button type="button" class="history-tab-btn" data-tab="remits">
+                            Remits
+                        </button>
+                    </div>
+
+                    <!-- Units Table -->
+                    <div id="unitsTab" class="history-tab-content active">
+                        <table class="transaction-table">
+                            <thead>
+                                <tr>
+                                    <th>Unit Name</th>
+                                    <th>Condition</th>
+                                    <th>Date</th>
+                                    <th>Cost</th>
+                                    <th>Sold For</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="unitsTableBody">
+                                <!-- Units will be dynamically added here -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Funds Table -->
+                    <div id="fundsTab" class="history-tab-content">
+                        <table class="transaction-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Amount</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="fundsTableBody">
+                                <!-- Funds will be dynamically added here -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Remits Table -->
+                    <div id="remitsTab" class="history-tab-content">
+                        <table class="transaction-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Amount</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="remitsTableBody">
+                                <!-- Remits will be dynamically added here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>  
+    </body>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <!-- Add this after your other Firebase scripts -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="script.js"></script>
+</html>
