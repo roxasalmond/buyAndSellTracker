@@ -138,9 +138,8 @@
                         </button>
                     </div>
 
-                    <!-- Units Table -->
-                    <div id="unitsTab" class="history-tab-content active">
-                        <table class="transaction-table">
+                    <div id="unitsTable" class="transaction-section">
+                        <table>
                             <thead>
                                 <tr>
                                     <th>Unit Name</th>
@@ -152,15 +151,12 @@
                                     <th>Action</th>
                                 </tr>
                             </thead>
-                            <tbody id="unitsTableBody">
-                                <!-- Units will be dynamically added here -->
-                            </tbody>
+                            <tbody id="units-body"></tbody>
                         </table>
                     </div>
 
-                    <!-- Funds Table -->
-                    <div id="fundsTab" class="history-tab-content">
-                        <table class="transaction-table">
+                    <div id="fundsTable" class="transaction-section">
+                        <table>
                             <thead>
                                 <tr>
                                     <th>Date</th>
@@ -168,15 +164,12 @@
                                     <th>Action</th>
                                 </tr>
                             </thead>
-                            <tbody id="fundsTableBody">
-                                <!-- Funds will be dynamically added here -->
-                            </tbody>
+                            <tbody id="funds-body"></tbody>
                         </table>
                     </div>
 
-                    <!-- Remits Table -->
-                    <div id="remitsTab" class="history-tab-content">
-                        <table class="transaction-table">
+                    <div id="remitsTable" class="transaction-section">
+                        <table>
                             <thead>
                                 <tr>
                                     <th>Date</th>
@@ -184,14 +177,18 @@
                                     <th>Action</th>
                                 </tr>
                             </thead>
-                            <tbody id="remitsTableBody">
-                                <!-- Remits will be dynamically added here -->
-                            </tbody>
+                            <tbody id="remits-body"></tbody>
                         </table>
                     </div>
                 </div>
             </div>
-        </div>  
+        </div>
+
+        <div id="activity-history" class="activity-history">
+            <h2>Activity History</h2>
+            <ul id="activity-list">
+            </ul>
+        </div> 
     </body>
     <script src="script.js"></script>
 </html>
