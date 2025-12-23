@@ -50,41 +50,41 @@ historyTabButtons.forEach((button) => {
 });
 
 // Handle Unit Form submission
-document.getElementById('unitForm').addEventListener('submit', async (e) => {
+document.getElementById("unitForm").addEventListener("submit", async (e) => {
   e.preventDefault();
-  
-  const cost = parseFloat(document.getElementById('unitAmount').value);
-  
+
+  const cost = parseFloat(document.getElementById("unitAmount").value);
+
   const unitData = {
-    type: 'unit',
-    name: document.getElementById('unitName').value,
-    condition: document.getElementById('unitCondition').value,
-    date: document.getElementById('unitDate').value,
+    type: "unit",
+    name: document.getElementById("unitName").value,
+    condition: document.getElementById("unitCondition").value,
+    date: document.getElementById("unitDate").value,
     cost: cost,
     soldFor: null,
-    status: 'in-stock',
-    timestamp: Date.now()
+    status: "in-stock",
+    timestamp: Date.now(),
   };
-  
+
   try {
     // Add the unit
-    await database.ref('transactions').push(unitData);
-    
+    await database.ref("transactions").push(unitData);
+
     // Create a remit transaction to deduct from fund
     const remitData = {
-      type: 'remit',
-      date: document.getElementById('unitDate').value,
+      type: "remit",
+      date: document.getElementById("unitDate").value,
       amount: cost,
-      reason: `Unit purchase: ${unitData.name}`,  // Optional: track why
-      timestamp: Date.now()
+      reason: `Unit purchase: ${unitData.name}`, // Optional: track why
+      timestamp: Date.now(),
     };
-    await database.ref('transactions').push(remitData);
-    
+    await database.ref("transactions").push(remitData);
+
     e.target.reset();
-    alert('Unit added successfully! Fund deducted.');
+    alert("Unit added successfully! Fund deducted.");
   } catch (error) {
-    console.error('Error adding unit:', error);
-    alert('Failed to add unit');
+    console.error("Error adding unit:", error);
+    alert("Failed to add unit");
   }
 });
 
@@ -129,7 +129,6 @@ document.getElementById("remitForm").addEventListener("submit", async (e) => {
     alert("Failed to record remittance");
   }
 });
-
 
 // Render transactions separated by type
 function renderTransactionsByType(transactions) {
@@ -221,79 +220,112 @@ function renderTransactionsByType(transactions) {
       actionCell.setAttribute("data-label", "Action");
 
       if (isSold) {
+        // Create Delete button
         const deleteBtn = document.createElement("button");
         deleteBtn.classList.add("delete-btn");
-
-        if (transaction.deleted) {
-          deleteBtn.textContent = "Restore";
-          deleteBtn.onclick = async () => {
-            // Restore the unit
+        deleteBtn.textContent = "Delete";
+        deleteBtn.onclick = async () => {
+          if (confirm("Are you sure you want to delete this transaction?")) {
             await database.ref(`transactions/${transaction.id}`).update({
-              deleted: false,
+              deleted: true,
+              deletedAt: Date.now(),
             });
-            
-            // Also restore related income and fund-return
-            const allTransactions = await database.ref('transactions').once('value');
-            allTransactions.forEach(snap => {
+
+            const allTransactions = await database
+              .ref("transactions")
+              .once("value");
+            allTransactions.forEach((snap) => {
               const trans = snap.val();
-              if (trans.unitId === transaction.id && (trans.type === 'income' || trans.type === 'fund-return')) {
-                database.ref(`transactions/${snap.key}`).update({ deleted: false });
+              if (
+                trans.unitId === transaction.id &&
+                (trans.type === "income" || trans.type === "fund-return")
+              ) {
+                database
+                  .ref(`transactions/${snap.key}`)
+                  .update({ deleted: true });
               }
             });
-          };
-        } else {
-          deleteBtn.textContent = "Delete";
-          deleteBtn.onclick = async () => {
-            if (confirm("Are you sure you want to delete this transaction?")) {
-              // Mark unit as deleted
-              await database.ref(`transactions/${transaction.id}`).update({
-                deleted: true,
-                deletedAt: Date.now(),
-              });
-              
-              // Also mark related income and fund-return as deleted
-              const allTransactions = await database.ref('transactions').once('value');
-              allTransactions.forEach(snap => {
-                const trans = snap.val();
-                if (trans.unitId === transaction.id && (trans.type === 'income' || trans.type === 'fund-return')) {
-                  database.ref(`transactions/${snap.key}`).update({ deleted: true });
-                }
-              });
+          }
+        };
+
+        // Create Restore button
+        const restoreBtn = document.createElement("button");
+        restoreBtn.classList.add("restore-btn");
+        restoreBtn.textContent = "Restore";
+        restoreBtn.onclick = async () => {
+          await database.ref(`transactions/${transaction.id}`).update({
+            deleted: false,
+          });
+
+          const allTransactions = await database
+            .ref("transactions")
+            .once("value");
+          allTransactions.forEach((snap) => {
+            const trans = snap.val();
+            if (
+              trans.unitId === transaction.id &&
+              (trans.type === "income" || trans.type === "fund-return")
+            ) {
+              database
+                .ref(`transactions/${snap.key}`)
+                .update({ deleted: false });
             }
-          };
+          });
+        };
+
+        // Show/hide based on deleted status
+        if (transaction.deleted) {
+          deleteBtn.style.display = "none";
+          restoreBtn.style.display = "inline-block";
+        } else {
+          deleteBtn.style.display = "inline-block";
+          restoreBtn.style.display = "none";
         }
 
         actionCell.appendChild(deleteBtn);
+        actionCell.appendChild(restoreBtn);
       } else {
         // Create Sell button
         const sellBtn = document.createElement("button");
         sellBtn.classList.add("sell-btn");
         sellBtn.textContent = "Sell";
         sellBtn.onclick = () => sellUnit(transaction.id);
-
         // Create Delete button
         const deleteBtn = document.createElement("button");
         deleteBtn.classList.add("delete-btn");
+        deleteBtn.textContent = "Delete";
+        deleteBtn.onclick = async () => {
+          if (
+            confirm("Are you sure you want to permanently delete this unit?")
+          ) {
+            await database.ref(`transactions/${transaction.id}`).remove();
+          }
+        };
 
+        // Create Restore button
+        const restoreBtn = document.createElement("button");
+        restoreBtn.classList.add("restore-btn");
+        restoreBtn.textContent = "Restore";
+        restoreBtn.onclick = async () => {
+          await database.ref(`transactions/${transaction.id}`).update({
+            deleted: false,
+          });
+        };
+
+        // Show/hide based on deleted status
         if (transaction.deleted) {
-          deleteBtn.textContent = "Restore";
-          deleteBtn.onclick = async () => {
-            await database.ref(`transactions/${transaction.id}`).update({
-              deleted: false,
-            });
-          };
+          sellBtn.style.display = "none";
+          deleteBtn.style.display = "none";
+          restoreBtn.style.display = "inline-block";
         } else {
-          deleteBtn.textContent = "Delete";
-          deleteBtn.onclick = async () => {
-            if (confirm("Are you sure you want to permanently delete this unit?")) {
-              // Hard delete - remove from database
-              await database.ref(`transactions/${transaction.id}`).remove();
-            }
-          };
+          sellBtn.style.display = "inline-block";
+          deleteBtn.style.display = "inline-block";
+          restoreBtn.style.display = "none";
         }
 
         actionCell.appendChild(sellBtn);
         actionCell.appendChild(deleteBtn);
+        actionCell.appendChild(restoreBtn);
       }
 
       row.appendChild(nameCell);
@@ -307,7 +339,7 @@ function renderTransactionsByType(transactions) {
       unitsBody.appendChild(row);
     }
     // ========== UNITS SECTION END ==========
-    
+
     // ========== FUNDS SECTION START ==========
     else if (
       transaction.type === "fund" ||
@@ -333,7 +365,7 @@ function renderTransactionsByType(transactions) {
 
       const deleteBtn = document.createElement("button");
       deleteBtn.classList.add("delete-btn");
-      
+
       if (transaction.deleted) {
         deleteBtn.textContent = "Restore";
         deleteBtn.onclick = async () => {
@@ -346,7 +378,7 @@ function renderTransactionsByType(transactions) {
           if (transaction.type === "fund-return" && transaction.unitId) {
             await database.ref(`transactions/${transaction.unitId}`).update({
               deleted: false,
-              status: 'sold',
+              status: "sold",
             });
 
             const allTransactions = await database
@@ -370,23 +402,28 @@ function renderTransactionsByType(transactions) {
         deleteBtn.onclick = async () => {
           if (confirm("Are you sure you want to delete this transaction?")) {
             // If this is a fund-return, restore the unit to in-stock
-            if (transaction.type === 'fund-return' && transaction.unitId) {
+            if (transaction.type === "fund-return" && transaction.unitId) {
               // Restore unit to in-stock
               await database.ref(`transactions/${transaction.unitId}`).update({
-                status: 'in-stock',
+                status: "in-stock",
                 soldFor: null,
-                soldDate: null
+                soldDate: null,
               });
-              
+
               // Delete related income (hard delete)
-              const allTransactions = await database.ref('transactions').once('value');
-              allTransactions.forEach(snap => {
+              const allTransactions = await database
+                .ref("transactions")
+                .once("value");
+              allTransactions.forEach((snap) => {
                 const trans = snap.val();
-                if (trans.unitId === transaction.unitId && trans.type === 'income') {
+                if (
+                  trans.unitId === transaction.unitId &&
+                  trans.type === "income"
+                ) {
                   database.ref(`transactions/${snap.key}`).remove();
                 }
               });
-              
+
               // Hard delete the fund-return itself
               await database.ref(`transactions/${transaction.id}`).remove();
             } else {
@@ -399,7 +436,7 @@ function renderTransactionsByType(transactions) {
           }
         };
       }
-      
+
       actionCell.appendChild(deleteBtn);
       row.appendChild(dateCell);
       row.appendChild(amountCell);
@@ -408,7 +445,7 @@ function renderTransactionsByType(transactions) {
       fundsBody.appendChild(row);
     }
     // ========== FUNDS SECTION END ==========
-    
+
     // ========== REMITS SECTION START ==========
     else if (transaction.type === "remit") {
       const row = document.createElement("tr");
@@ -485,7 +522,7 @@ async function sellUnit(unitId) {
       alert("Unit not found");
       return;
     }
-    
+
     // 4. Calculate profit
     const originalCost = unit.cost;
     const profit = soldAmount - originalCost;
@@ -500,7 +537,7 @@ async function sellUnit(unitId) {
     if (profit > 0) {
       // PROFIT SCENARIO
       const halfProfit = profit / 2;
-      
+
       // 6. Create income transaction
       const incomeData = {
         type: "income",
@@ -512,7 +549,7 @@ async function sellUnit(unitId) {
         timestamp: Date.now(),
       };
       await database.ref("transactions").push(incomeData);
-      
+
       // 7. Create fund-return transaction
       const fundReturnData = {
         type: "fund-return",
@@ -523,16 +560,19 @@ async function sellUnit(unitId) {
         timestamp: Date.now(),
       };
       await database.ref("transactions").push(fundReturnData);
-      
+
       // 8. Show success message
       alert(
-        `Unit sold!\nProfit: ₱${profit.toFixed(2)}\nHalf to divided income: ₱${halfProfit.toFixed(2)}\nReturned to fund: ₱${(originalCost + halfProfit).toFixed(2)}`
+        `Unit sold!\nProfit: ₱${profit.toFixed(
+          2
+        )}\nHalf to divided income: ₱${halfProfit.toFixed(
+          2
+        )}\nReturned to fund: ₱${(originalCost + halfProfit).toFixed(2)}`
       );
-      
     } else {
       // LOSS SCENARIO
       // 6. NO income transaction (no profit to split!)
-      
+
       // 7. Fund-return is just what you sold it for
       const fundReturnData = {
         type: "fund-return",
@@ -543,13 +583,14 @@ async function sellUnit(unitId) {
         timestamp: Date.now(),
       };
       await database.ref("transactions").push(fundReturnData);
-      
+
       // 8. Show loss message
       alert(
-        `Unit sold at a LOSS!\nLoss: ₱${Math.abs(profit).toFixed(2)}\nReturned to fund: ₱${soldAmount.toFixed(2)}`
+        `Unit sold at a LOSS!\nLoss: ₱${Math.abs(profit).toFixed(
+          2
+        )}\nReturned to fund: ₱${soldAmount.toFixed(2)}`
       );
     }
-    
   } catch (error) {
     console.error("Error selling unit:", error);
     alert("Failed to record sale");

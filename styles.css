@@ -279,37 +279,7 @@ body {
     transform: translateY(0);
 }
 
-/* Transaction History Tabs */
 
-.main-content {
-    flex: 1;
-    padding: 40px;
-}
-.history-tabs {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 12px;
-    border-bottom: 2px solid #1a1a1a;
-}
-
-.transaction-table {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-}
-
-
-.transaction-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.transaction-table tr {
-    display: grid;
-    grid-template-columns: 2fr 1.5fr 1.5fr 1.5fr 1.5fr 1.2fr 1.5fr;
-    gap: 10px;
-    align-items: center;
-}
 
 .transaction-table th,
 .transaction-table td {
@@ -412,23 +382,7 @@ button[onclick*="deleteTransaction"]:hover {
   background-color: #ff0000; /* red-600 */
 }
 
-.status-badge {
-    padding: 6px 12px;
-    border-radius: 6px;
-    border: none;
-    font-size: 12px;
-    font-weight: 600;
-}
 
-.status-in-stock {
-    background-color: #1a1a1a;
-    color: #888888;
-}
-
-.status-sold {
-    background-color: #9EFF00;
-    color: #000000;
-}
 
 /* Responsive Design */
 /* Responsive Design */
@@ -549,4 +503,55 @@ tr.deleted-row {
     font-size: 12px;
     font-weight: 600;
     transition: all 0.3s ease;
+}
+
+.restore-btn {
+    padding: 6px 12px;
+    background-color: #9EFF00;
+    color: #000000;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.status-in-stock {
+    
+    background-color: #1a1a1a;
+    color: #888888;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.status-sold {
+    padding: 5px 12px;
+    background-color: #9EFF00;
+    color: #000000;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.status-badge {
+    padding: 5px 12px;
+    background-color: #9EFF00;
+    color: #000000;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
