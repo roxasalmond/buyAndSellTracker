@@ -363,24 +363,22 @@ function renderTransactionsByType(transactions) {
       const actionCell = document.createElement("td");
       actionCell.setAttribute("data-label", "Action");
 
+      // Create Delete button
       const deleteBtn = document.createElement("button");
       deleteBtn.classList.add("delete-btn");
-
-      if (transaction.deleted) {
-        deleteBtn.textContent = "Restore";
-        deleteBtn.onclick = async () => {
-          // Restore the fund/fund-return
-          await database.ref(`transactions/${transaction.id}`).update({
-            deleted: false,
-          });
-
-          // If this is a fund-return, also restore the related unit and income
+      deleteBtn.textContent = "Delete";
+      deleteBtn.onclick = async () => {
+        if (confirm("Are you sure you want to delete this transaction?")) {
+          // If this is a fund-return, restore the unit to in-stock
           if (transaction.type === "fund-return" && transaction.unitId) {
+            // Restore unit to in-stock
             await database.ref(`transactions/${transaction.unitId}`).update({
-              deleted: false,
-              status: "sold",
+              status: "in-stock",
+              soldFor: null,
+              soldDate: null,
             });
 
+            // Delete related income (hard delete)
             const allTransactions = await database
               .ref("transactions")
               .once("value");
@@ -390,54 +388,68 @@ function renderTransactionsByType(transactions) {
                 trans.unitId === transaction.unitId &&
                 trans.type === "income"
               ) {
-                database
-                  .ref(`transactions/${snap.key}`)
-                  .update({ deleted: false });
+                database.ref(`transactions/${snap.key}`).remove();
               }
             });
+
+            // Hard delete the fund-return itself
+            await database.ref(`transactions/${transaction.id}`).remove();
+          } else {
+            // Regular fund - just soft delete
+            await database.ref(`transactions/${transaction.id}`).update({
+              deleted: true,
+              deletedAt: Date.now(),
+            });
           }
-        };
-      } else {
-        deleteBtn.textContent = "Delete";
-        deleteBtn.onclick = async () => {
-          if (confirm("Are you sure you want to delete this transaction?")) {
-            // If this is a fund-return, restore the unit to in-stock
-            if (transaction.type === "fund-return" && transaction.unitId) {
-              // Restore unit to in-stock
-              await database.ref(`transactions/${transaction.unitId}`).update({
-                status: "in-stock",
-                soldFor: null,
-                soldDate: null,
-              });
+        }
+      };
 
-              // Delete related income (hard delete)
-              const allTransactions = await database
-                .ref("transactions")
-                .once("value");
-              allTransactions.forEach((snap) => {
-                const trans = snap.val();
-                if (
-                  trans.unitId === transaction.unitId &&
-                  trans.type === "income"
-                ) {
-                  database.ref(`transactions/${snap.key}`).remove();
-                }
-              });
+      // Create Restore button
+      const restoreBtn = document.createElement("button");
+      restoreBtn.classList.add("restore-btn");
+      restoreBtn.textContent = "Restore";
+      restoreBtn.onclick = async () => {
+        // Restore the fund/fund-return
+        await database.ref(`transactions/${transaction.id}`).update({
+          deleted: false,
+        });
 
-              // Hard delete the fund-return itself
-              await database.ref(`transactions/${transaction.id}`).remove();
-            } else {
-              // Regular fund - just soft delete
-              await database.ref(`transactions/${transaction.id}`).update({
-                deleted: true,
-                deletedAt: Date.now(),
-              });
+        // If this is a fund-return, also restore the related unit and income
+        if (transaction.type === "fund-return" && transaction.unitId) {
+          await database.ref(`transactions/${transaction.unitId}`).update({
+            deleted: false,
+            status: "sold",
+          });
+
+          const allTransactions = await database
+            .ref("transactions")
+            .once("value");
+          allTransactions.forEach((snap) => {
+            const trans = snap.val();
+            if (
+              trans.unitId === transaction.unitId &&
+              trans.type === "income"
+            ) {
+              database
+                .ref(`transactions/${snap.key}`)
+                .update({ deleted: false });
             }
-          }
-        };
+          });
+        }
+      };
+
+      // Show/hide based on deleted status
+      if (transaction.deleted) {
+        deleteBtn.style.display = "none";
+        restoreBtn.style.display = "inline-block";
+      } else {
+        deleteBtn.style.display = "inline-block";
+        restoreBtn.style.display = "none";
       }
 
       actionCell.appendChild(deleteBtn);
+      actionCell.appendChild(restoreBtn);
+
       row.appendChild(dateCell);
       row.appendChild(amountCell);
       row.appendChild(actionCell);
@@ -466,28 +478,40 @@ function renderTransactionsByType(transactions) {
       const actionCell = document.createElement("td");
       actionCell.setAttribute("data-label", "Action");
 
+      // Create Delete button
       const deleteBtn = document.createElement("button");
       deleteBtn.classList.add("delete-btn");
-
-      if (transaction.deleted) {
-        deleteBtn.textContent = "Restore";
-        deleteBtn.onclick = async () => {
+      deleteBtn.textContent = "Delete";
+      deleteBtn.onclick = async () => {
+        if (confirm("Are you sure you want to delete this transaction?")) {
           await database.ref(`transactions/${transaction.id}`).update({
-            deleted: false,
+            deleted: true,
+            deletedAt: Date.now(),
           });
-        };
+        }
+      };
+
+      // Create Restore button
+      const restoreBtn = document.createElement("button");
+      restoreBtn.classList.add("restore-btn");
+      restoreBtn.textContent = "Restore";
+      restoreBtn.onclick = async () => {
+        await database.ref(`transactions/${transaction.id}`).update({
+          deleted: false,
+        });
+      };
+
+      // Show/hide based on deleted status
+      if (transaction.deleted) {
+        deleteBtn.style.display = "none";
+        restoreBtn.style.display = "inline-block";
       } else {
-        deleteBtn.textContent = "Delete";
-        deleteBtn.onclick = async () => {
-          if (confirm("Are you sure you want to delete this transaction?")) {
-            await database.ref(`transactions/${transaction.id}`).update({
-              deleted: true,
-              deletedAt: Date.now(),
-            });
-          }
-        };
+        deleteBtn.style.display = "inline-block";
+        restoreBtn.style.display = "none";
       }
 
+      actionCell.appendChild(deleteBtn);
+      actionCell.appendChild(restoreBtn);
       actionCell.appendChild(deleteBtn);
       row.appendChild(dateCell);
       row.appendChild(amountCell);
