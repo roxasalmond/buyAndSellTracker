@@ -1,4 +1,4 @@
-// Your web app's Firebase configuration
+//Firebase configuration
 const database = firebase.database();
 
 // Set up listener after authentication
@@ -14,6 +14,16 @@ auth.onAuthStateChanged((user) => {
     });
   }
 });
+
+// Logout functionality
+const logoutBtn = document.getElementById("logoutBtn");
+if (logoutBtn) {
+  logoutBtn.addEventListener("click", () => {
+    auth.signOut().then(() => {
+      window.location.href = "login.html";
+    });
+  });
+}
 
 // Form switching logic (sidebar forms)
 const formButtons = document.querySelectorAll(".form-btn");
@@ -49,14 +59,33 @@ historyTabButtons.forEach((button) => {
   });
 });
 
+async function getNextTransactionId() {
+  const counterRef = database.ref("metadata/transactionCounter");
+
+  // Get current counter value
+  const snapshot = await counterRef.once("value");
+  const currentCount = snapshot.val() || 0;
+  const nextCount = currentCount + 1;
+
+  // Increment counter
+  await counterRef.set(nextCount);
+
+  // Return formatted ID
+  return `TXN-${String(nextCount).padStart(3, "0")}`;
+}
+
 // Handle Unit Form submission
 document.getElementById("unitForm").addEventListener("submit", async (e) => {
   e.preventDefault();
 
   const cost = parseFloat(document.getElementById("unitAmount").value);
 
+  // Generate transaction ID for unit
+  const transactionId = await getNextTransactionId();
+
   const unitData = {
     type: "unit",
+    transactionId: transactionId,
     name: document.getElementById("unitName").value,
     condition: document.getElementById("unitCondition").value,
     date: document.getElementById("unitDate").value,
@@ -67,18 +96,24 @@ document.getElementById("unitForm").addEventListener("submit", async (e) => {
   };
 
   try {
-    // Add the unit
-    await database.ref("transactions").push(unitData);
+    // Add the unit and GET ITS ID
+    const unitRef = await database.ref("transactions").push(unitData);
+    const unitId = unitRef.key;
 
-    // Create a remit transaction to deduct from fund
-    const remitData = {
-      type: "remit",
+    // Generate transaction ID for expense
+    const expenseTransactionId = await getNextTransactionId();
+
+    // Create an EXPENSE transaction (not remit!)
+    const expenseData = {
+      type: "expense", // Changed from "remit"
+      transactionId: expenseTransactionId,
+      unitId: unitId,
       date: document.getElementById("unitDate").value,
       amount: cost,
-      reason: `Unit purchase: ${unitData.name}`, // Optional: track why
+      reason: `Unit purchase: ${unitData.name}`,
       timestamp: Date.now(),
     };
-    await database.ref("transactions").push(remitData);
+    await database.ref("transactions").push(expenseData);
 
     e.target.reset();
     alert("Unit added successfully! Fund deducted.");
@@ -92,8 +127,12 @@ document.getElementById("unitForm").addEventListener("submit", async (e) => {
 document.getElementById("fundForm").addEventListener("submit", async (e) => {
   e.preventDefault();
 
+  // Generate transaction ID
+  const transactionId = await getNextTransactionId();
+
   const fundData = {
     type: "fund",
+    transactionId: transactionId, // ADD THIS
     date: document.getElementById("fundDate").value,
     amount: parseFloat(document.getElementById("fundAmount").value),
     timestamp: Date.now(),
@@ -113,8 +152,12 @@ document.getElementById("fundForm").addEventListener("submit", async (e) => {
 document.getElementById("remitForm").addEventListener("submit", async (e) => {
   e.preventDefault();
 
+  // Generate transaction ID
+  const transactionId = await getNextTransactionId();
+
   const remitData = {
     type: "remit",
+    transactionId: transactionId, // ADD THIS
     date: document.getElementById("remitDate").value,
     amount: parseFloat(document.getElementById("remitAmount").value),
     timestamp: Date.now(),
@@ -167,6 +210,10 @@ function renderTransactionsByType(transactions) {
       }
 
       const isSold = transaction.status === "sold";
+
+      const transactionIdCell = document.createElement("td");
+      transactionIdCell.setAttribute("data-label", "Transaction ID");
+      transactionIdCell.textContent = transaction.transactionId || "N/A";
 
       const nameCell = document.createElement("td");
       nameCell.setAttribute("data-label", "Unit Name");
@@ -226,11 +273,13 @@ function renderTransactionsByType(transactions) {
         deleteBtn.textContent = "Delete";
         deleteBtn.onclick = async () => {
           if (confirm("Are you sure you want to delete this transaction?")) {
+            // Soft delete the unit
             await database.ref(`transactions/${transaction.id}`).update({
               deleted: true,
               deletedAt: Date.now(),
             });
 
+            // Also soft delete related income and fund-return
             const allTransactions = await database
               .ref("transactions")
               .once("value");
@@ -290,6 +339,7 @@ function renderTransactionsByType(transactions) {
         sellBtn.classList.add("sell-btn");
         sellBtn.textContent = "Sell";
         sellBtn.onclick = () => sellUnit(transaction.id);
+
         // Create Delete button
         const deleteBtn = document.createElement("button");
         deleteBtn.classList.add("delete-btn");
@@ -298,7 +348,19 @@ function renderTransactionsByType(transactions) {
           if (
             confirm("Are you sure you want to permanently delete this unit?")
           ) {
+            // Hard delete the unit
             await database.ref(`transactions/${transaction.id}`).remove();
+
+            // Also delete the associated expense
+            const allTransactions = await database
+              .ref("transactions")
+              .once("value");
+            allTransactions.forEach((snap) => {
+              const trans = snap.val();
+              if (trans.unitId === transaction.id && trans.type === "expense") {
+                database.ref(`transactions/${snap.key}`).remove();
+              }
+            });
           }
         };
 
@@ -328,6 +390,7 @@ function renderTransactionsByType(transactions) {
         actionCell.appendChild(restoreBtn);
       }
 
+      row.appendChild(transactionIdCell);
       row.appendChild(nameCell);
       row.appendChild(conditionCell);
       row.appendChild(dateCell);
@@ -351,6 +414,10 @@ function renderTransactionsByType(transactions) {
         row.classList.add("deleted-row");
       }
 
+      const transactionIdCell = document.createElement("td");
+      transactionIdCell.setAttribute("data-label", "Transaction ID");
+      transactionIdCell.textContent = transaction.transactionId || "N/A";
+
       const dateCell = document.createElement("td");
       dateCell.setAttribute("data-label", "Date");
       dateCell.textContent = transaction.date || "N/A";
@@ -359,6 +426,15 @@ function renderTransactionsByType(transactions) {
       amountCell.setAttribute("data-label", "Amount");
       amountCell.classList.add("income");
       amountCell.textContent = `+₱${(transaction.amount || 0).toFixed(2)}`;
+
+      // Creating description cell
+      const descriptionCell = document.createElement("td");
+      descriptionCell.setAttribute("data-label", "Description");
+      if (transaction.type === "fund-return") {
+        descriptionCell.textContent = `Return from: ${transaction.unitName}`;
+      } else {
+        descriptionCell.textContent = "Fund Added";
+      }
 
       const actionCell = document.createElement("td");
       actionCell.setAttribute("data-label", "Action");
@@ -450,8 +526,10 @@ function renderTransactionsByType(transactions) {
       actionCell.appendChild(deleteBtn);
       actionCell.appendChild(restoreBtn);
 
+      row.appendChild(transactionIdCell);
       row.appendChild(dateCell);
       row.appendChild(amountCell);
+      row.appendChild(descriptionCell);
       row.appendChild(actionCell);
 
       fundsBody.appendChild(row);
@@ -465,6 +543,10 @@ function renderTransactionsByType(transactions) {
       if (transaction.deleted) {
         row.classList.add("deleted-row");
       }
+
+      const transactionIdCell = document.createElement("td");
+      transactionIdCell.setAttribute("data-label", "Transaction ID");
+      transactionIdCell.textContent = transaction.transactionId || "N/A";
 
       const dateCell = document.createElement("td");
       dateCell.setAttribute("data-label", "Date");
@@ -512,16 +594,17 @@ function renderTransactionsByType(transactions) {
 
       actionCell.appendChild(deleteBtn);
       actionCell.appendChild(restoreBtn);
-      actionCell.appendChild(deleteBtn);
+
+      row.appendChild(transactionIdCell);
       row.appendChild(dateCell);
       row.appendChild(amountCell);
       row.appendChild(actionCell);
 
       remitsBody.appendChild(row);
     }
-    // ========== REMITS SECTION END ==========
   });
 }
+// ========== REMITS SECTION END ==========
 
 /* Handle selling a unit */
 async function sellUnit(unitId) {
@@ -562,9 +645,13 @@ async function sellUnit(unitId) {
       // PROFIT SCENARIO
       const halfProfit = profit / 2;
 
+      // Generate ID for income
+      const incomeTransactionId = await getNextTransactionId();
+
       // 6. Create income transaction
       const incomeData = {
         type: "income",
+        transactionId: incomeTransactionId,
         unitId: unitId,
         unitName: unit.name,
         profit: profit,
@@ -574,9 +661,13 @@ async function sellUnit(unitId) {
       };
       await database.ref("transactions").push(incomeData);
 
+      // Generate ID for fund-return
+      const fundReturnTransactionId = await getNextTransactionId();
+
       // 7. Create fund-return transaction
       const fundReturnData = {
         type: "fund-return",
+        transactionId: fundReturnTransactionId,
         unitId: unitId,
         unitName: unit.name,
         amount: originalCost + halfProfit,
@@ -595,11 +686,13 @@ async function sellUnit(unitId) {
       );
     } else {
       // LOSS SCENARIO
-      // 6. NO income transaction (no profit to split!)
+      // Generate ID for fund-return
+      const fundReturnTransactionId = await getNextTransactionId();
 
       // 7. Fund-return is just what you sold it for
       const fundReturnData = {
         type: "fund-return",
+        transactionId: fundReturnTransactionId,
         unitId: unitId,
         unitName: unit.name,
         amount: soldAmount,
@@ -650,9 +743,9 @@ function updateSummary(transactions) {
         totalFund += transaction.amount || 0;
       } else if (transaction.type === "remit") {
         totalFund -= transaction.amount || 0;
-      } else if (transaction.type === "income") {
-        totalIncome += transaction.profit || 0;
-        totalDivided += transaction.dividedAmount || 0;
+      } else if (transaction.type === "expense") {
+        // ADD THIS
+        totalFund -= transaction.amount || 0;
       }
     });
   }
