@@ -1,4 +1,3 @@
-// js/main.js
 //Firebase configuration
 const database = firebase.database();
 
@@ -12,6 +11,7 @@ auth.onAuthStateChanged((user) => {
       console.log("Transactions loaded:", transactions);
       renderTransactionsByType(transactions);
       updateSummary(transactions);
+      renderActivityFeed(transactions);
     });
   } else {
     // Redirect to login if not authenticated
@@ -62,3 +62,5 @@ historyTabButtons.forEach((button) => {
     document.getElementById(`${tabType}Table`).classList.add("active");
   });
 });
+
+

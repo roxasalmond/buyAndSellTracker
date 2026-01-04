@@ -1,5 +1,4 @@
 // Update summary calculations
-
 function updateSummary(transactions) {
   console.log("Updating summary with:", transactions);
 

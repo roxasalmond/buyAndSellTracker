@@ -16,6 +16,8 @@ document.getElementById("unitForm").addEventListener("submit", async (e) => {
     cost: cost,
     soldFor: null,
     status: "in-stock",
+    createdBy: auth.currentUser.email,
+    createdAt: Date.now(), 
     timestamp: Date.now(),
   };
 
@@ -35,6 +37,8 @@ document.getElementById("unitForm").addEventListener("submit", async (e) => {
       date: document.getElementById("unitDate").value,
       amount: cost,
       reason: `Unit purchase: ${unitData.name}`,
+      createdBy: auth.currentUser.email,
+      createdAt: Date.now(),
       timestamp: Date.now(),
     };
     await database.ref("transactions").push(expenseData);
@@ -59,6 +63,8 @@ document.getElementById("fundForm").addEventListener("submit", async (e) => {
     transactionId: transactionId, // ADD THIS
     date: document.getElementById("fundDate").value,
     amount: parseFloat(document.getElementById("fundAmount").value),
+    createdBy: auth.currentUser.email,
+    createdAt: Date.now(),
     timestamp: Date.now(),
   };
 
@@ -84,6 +90,8 @@ document.getElementById("remitForm").addEventListener("submit", async (e) => {
     transactionId: transactionId, // ADD THIS
     date: document.getElementById("remitDate").value,
     amount: parseFloat(document.getElementById("remitAmount").value),
+    createdBy: auth.currentUser.email,
+    createdAt: Date.now(),
     timestamp: Date.now(),
   };
 

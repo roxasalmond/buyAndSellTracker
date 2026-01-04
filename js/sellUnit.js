@@ -31,6 +31,8 @@ async function sellUnit(unitId) {
       soldFor: soldAmount,
       status: "sold",
       soldDate: new Date().toISOString().split("T")[0],
+      soldBy: auth.currentUser.email,
+      soldAt: Date.now(),
     });
 
     if (profit > 0) {
@@ -49,6 +51,8 @@ async function sellUnit(unitId) {
         profit: profit,
         dividedAmount: halfProfit,
         date: new Date().toISOString().split("T")[0],
+        createdBy: auth.currentUser.email,
+        createdAt: Date.now(),
         timestamp: Date.now(),
       };
       await database.ref("transactions").push(incomeData);
@@ -64,6 +68,8 @@ async function sellUnit(unitId) {
         unitName: unit.name,
         amount: originalCost + halfProfit,
         date: new Date().toISOString().split("T")[0],
+        createdBy: auth.currentUser.email,
+        createdAt: Date.now(),
         timestamp: Date.now(),
       };
       await database.ref("transactions").push(fundReturnData);

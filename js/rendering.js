@@ -102,6 +102,7 @@ function renderTransactionsByType(transactions) {
             await database.ref(`transactions/${transaction.id}`).update({
               deleted: true,
               deletedAt: Date.now(),
+              deletedBy: auth.currentUser.email,
             });
 
             // Also soft delete related income and fund-return
@@ -129,6 +130,8 @@ function renderTransactionsByType(transactions) {
         restoreBtn.onclick = async () => {
           await database.ref(`transactions/${transaction.id}`).update({
             deleted: false,
+            restoredBy: auth.currentUser.email,
+            restoredAt: Date.now(),
           });
 
           const allTransactions = await database
@@ -196,6 +199,8 @@ function renderTransactionsByType(transactions) {
         restoreBtn.onclick = async () => {
           await database.ref(`transactions/${transaction.id}`).update({
             deleted: false,
+            restoredBy: auth.currentUser.email,
+            restoredAt: Date.now(),
           });
         };
 
@@ -300,6 +305,7 @@ function renderTransactionsByType(transactions) {
             await database.ref(`transactions/${transaction.id}`).update({
               deleted: true,
               deletedAt: Date.now(),
+              deletedBy: auth.currentUser.email,
             });
           }
         }
@@ -313,6 +319,8 @@ function renderTransactionsByType(transactions) {
         // Restore the fund/fund-return
         await database.ref(`transactions/${transaction.id}`).update({
           deleted: false,
+          restoredBy: auth.currentUser.email,
+          restoredAt: Date.now(),
         });
 
         // If this is a fund-return, also restore the related unit and income
@@ -394,6 +402,7 @@ function renderTransactionsByType(transactions) {
           await database.ref(`transactions/${transaction.id}`).update({
             deleted: true,
             deletedAt: Date.now(),
+            deletedBy: auth.currentUser.email,
           });
         }
       };
@@ -405,6 +414,8 @@ function renderTransactionsByType(transactions) {
       restoreBtn.onclick = async () => {
         await database.ref(`transactions/${transaction.id}`).update({
           deleted: false,
+          restoredBy: auth.currentUser.email,
+          restoredAt: Date.now(), 
         });
       };
 
