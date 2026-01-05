@@ -381,81 +381,6 @@ button[onclick*="deleteTransaction"]:hover {
   background-color: #ff0000; /* red-600 */
 }
 
-/* Responsive Design */
-/* Responsive Design */
-@media (max-width: 1024px) {
-  .main-content {
-    padding: 30px;
-  }
-}
-
-@media (max-width: 768px) {
-  .main-container {
-    flex-direction: column;
-  }
-
-  .sidebar {
-    width: 100%;
-    border-right: none;
-    border-bottom: 1px solid #222222;
-  }
-
-  .main-content {
-    padding: 10px;
-  }
-
-  .form-type-selector {
-    flex-direction: column;
-  }
-
-  .income-summary {
-    flex-direction: column;
-  }
-
-  /* Mobile Table - Card Layout */
-  .transaction-table {
-    display: block;
-  }
-
-  .transaction-table thead {
-    display: none; /* Hide headers on mobile */
-  }
-
-  .transaction-table tbody {
-    display: block;
-  }
-
-  .transaction-table tr {
-    display: block;
-    background-color: #1a1a1a;
-    border-radius: 8px;
-    margin-bottom: 15px;
-    padding: 15px;
-  }
-
-  .transaction-table td {
-    display: flex;
-    align-items: center;
-    /* justify-content: space-between; */
-    padding: 8px 0;
-    border-bottom: 1px solid #222222;
-    text-align: center;
-    font-size: 14px;
-    gap: 4px;
-  }
-
-  .transaction-table td:last-child {
-    border-bottom: none;
-  }
-
-  /* Add labels before each data item */
-  .transaction-table td::before {
-    content: attr(data-label);
-    font-weight: 600;
-    color: #888888;
-    margin-right: 10px;
-  }
-}
 
 /* Scrollbar Styles */
 ::-webkit-scrollbar {
@@ -475,12 +400,6 @@ button[onclick*="deleteTransaction"]:hover {
   background: #444444;
 }
 
-/*new styles*/
-.activity-history {
-  max-height: 30vh; /* or maybe 25vh, 30vh? */
-  width: 390px; /* or let it be auto */
-  overflow-y: auto; /* enables scrolling! */
-}
 
 tr.deleted-row {
   opacity: 0.4;
@@ -545,24 +464,26 @@ tr.deleted-row {
   font-size: 12px;
   font-weight: 600;
   transition: all 0.3s ease;
-  display: flex;
   align-items: center;
   justify-content: center;
 }
 
+/* Activity History - Desktop */
 .activity-history {
   display: flex;
   flex-direction: column;
-  width: 100vw;
+  width: 100%;
+  max-height: 30vh;
   margin-top: 30px;
   padding: 20px;
-  background: #f8f9fa;
+  background: #1a1a1a;
   border-radius: 8px;
+  overflow-y: auto;
 }
 
 .activity-history h2 {
   margin-bottom: 15px;
-  color: #333;
+  color: #fff;
 }
 
 #activity-list {
@@ -575,38 +496,166 @@ tr.deleted-row {
 .activity-item {
   padding: 10px;
   margin-bottom: 8px;
-  background: white;
+  background: #222222;
   border-radius: 4px;
   font-size: 14px;
-  color: #333;
+  color: #fff;
 }
 
 .activity-time {
-  color: #666;
+  color: #888;
   font-size: 12px;
 }
 
 .activity-user {
   font-weight: 600;
-  color: #2196f3;
+  color: #9eff00;
 }
 
 .activity-action {
-  color: #333;
+  color: #fff;
 }
 
 .activity-item-name {
   font-style: italic;
-  color: #555;
+  color: #aaa;
 }
 
 .activity-id {
-  color: #999;
+  color: #666;
   font-size: 12px;
 }
 
 .no-activity {
-  color: #999;
+  color: #888;
   text-align: center;
   padding: 20px;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .activity-history {
+    width: 100%;
+    padding: 15px;
+    margin-top: 20px;
+  }
+
+  .activity-item {
+    padding: 12px;
+    font-size: 13px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .activity-time {
+    font-size: 11px;
+    display: block;
+  }
+
+  .activity-user,
+  .activity-action,
+  .activity-item-name {
+    display: inline;
+  }
+
+  .activity-id {
+    display: block;
+    margin-top: 2px;
+  }
+}
+
+
+/* Active button style */
+.history-tab-btn.active {
+  color: white;
+  /* or whatever style you prefer */
+}
+
+/* Hide sections by default, show when active */
+.transaction-section {
+  display: none;
+}
+
+.transaction-section.active {
+  display: block;
+}
+
+table {
+  border-spacing: 20px 5px; /* horizontal vertical */
+  border-collapse: separate; /* needed for border-spacing to work */
+}
+
+.history-tabs {
+  border-bottom: 1px solid #222222;
+  margin-bottom: 15px;
+}
+
+
+@media (max-width: 768px) {
+  .main-container {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid #222222;
+  }
+
+  .main-content {
+    padding: 10px;
+  }
+
+  .form-type-selector {
+    flex-direction: column;
+  }
+
+  .income-summary {
+    flex-direction: column;
+  }
+
+  /* Mobile Table - Vertical Stack */
+  .transaction-table {
+    display: block;
+    border-spacing: 0;
+  }
+
+  .transaction-table thead,
+  .transaction-table tbody,
+  .transaction-table tr {
+    display: block;
+  }
+
+  .transaction-table thead th {
+    display: none;
+  }
+
+  .transaction-table tbody tr {
+    background-color: #1a1a1a;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    padding: 15px;
+  }
+
+  .transaction-table tbody td {
+    display: block;
+    padding: 8px 0;
+    border-bottom: 1px solid #222222;
+    font-size: 14px;
+    text-align: left;
+  }
+
+  .transaction-table tbody td:last-child {
+    border-bottom: none;
+  }
+
+  /* Labels for body cells */
+  .transaction-table tbody td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: #888888;
+    display: block;
+    margin-bottom: 4px;
+  }
 }

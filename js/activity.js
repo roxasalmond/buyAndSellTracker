@@ -5,13 +5,33 @@ function generateActivityFeed(transactions) {
   const activities = [];
 
   Object.entries(transactions).forEach(([id, trans]) => {
+    // Skip auto-generated transactions linked to units
+    if (trans.type === "expense" && trans.unitId) {
+      return;
+    }
+    
+    if (trans.type === "fund-return" && trans.unitId) {
+      return;
+    }
+
     // Created
     if (trans.createdBy && trans.createdAt) {
+      let amount = null;
+      
+      if (trans.type === "unit") {
+        amount = trans.cost;
+      } else if (trans.type === "income" || trans.type === "fund" || trans.type === "fund-return") {
+        amount = trans.amount;
+      } else if (trans.type === "remit") {
+        amount = -trans.amount; // Negative for remittance
+      }
+
       activities.push({
         user: trans.createdBy,
         action: `added ${trans.type}`,
         itemName: trans.name || `${trans.type} transaction`,
         transactionId: trans.transactionId || "N/A",
+        amount: amount,
         timestamp: trans.createdAt,
       });
     }
@@ -23,6 +43,7 @@ function generateActivityFeed(transactions) {
         action: "sold unit",
         itemName: trans.name,
         transactionId: trans.transactionId || "N/A",
+        amount: trans.soldFor,
         timestamp: trans.soldAt,
       });
     }
@@ -34,6 +55,7 @@ function generateActivityFeed(transactions) {
         action: `deleted ${trans.type}`,
         itemName: trans.name || `${trans.type} transaction`,
         transactionId: trans.transactionId || "N/A",
+        amount: null,
         timestamp: trans.deletedAt,
       });
     }
@@ -45,15 +67,15 @@ function generateActivityFeed(transactions) {
         action: `restored ${trans.type}`,
         itemName: trans.name || `${trans.type} transaction`,
         transactionId: trans.transactionId || "N/A",
+        amount: null,
         timestamp: trans.restoredAt,
       });
     }
   });
 
-  // Sort by timestamp (newest first)
   activities.sort((a, b) => b.timestamp - a.timestamp);
 
-  return activities.slice(0, 20); // Show last 20 activities
+  return activities.slice(0, 20);
 }
 
 function renderActivityFeed(transactions) {
@@ -76,7 +98,6 @@ function renderActivityFeed(transactions) {
     const time = new Date(activity.timestamp).toLocaleString();
     const userName = activity.user.split("@")[0];
 
-    // Create elements instead of innerHTML
     const timeSpan = document.createElement("span");
     timeSpan.classList.add("activity-time");
     timeSpan.textContent = time;
@@ -96,16 +117,9 @@ function renderActivityFeed(transactions) {
     const separator3 = document.createTextNode(" ");
 
     const itemSpan = document.createElement("span");
-    itemSpan.classList.add("activity-item");
+    itemSpan.classList.add("activity-item-name");
     itemSpan.textContent = `"${activity.itemName}"`;
 
-    const separator4 = document.createTextNode(" ");
-
-    const idSpan = document.createElement("span");
-    idSpan.classList.add("activity-id");
-    idSpan.textContent = `(${activity.transactionId})`;
-
-    // Append all elements
     item.appendChild(timeSpan);
     item.appendChild(separator1);
     item.appendChild(userSpan);
@@ -113,7 +127,33 @@ function renderActivityFeed(transactions) {
     item.appendChild(actionSpan);
     item.appendChild(separator3);
     item.appendChild(itemSpan);
-    item.appendChild(separator4);
+
+    // Add amount if it exists
+    if (activity.amount !== null && activity.amount !== undefined) {
+      const separator4 = document.createTextNode(" for ");
+      
+      const amountSpan = document.createElement("span");
+      amountSpan.classList.add("activity-amount");
+      
+      if (activity.amount >= 0) {
+        amountSpan.classList.add("income");
+        amountSpan.textContent = `₱${activity.amount.toFixed(2)}`;
+      } else {
+        amountSpan.classList.add("expense");
+        amountSpan.textContent = `-₱${Math.abs(activity.amount).toFixed(2)}`;
+      }
+      
+      item.appendChild(separator4);
+      item.appendChild(amountSpan);
+    }
+
+    const separator5 = document.createTextNode(" ");
+
+    const idSpan = document.createElement("span");
+    idSpan.classList.add("activity-id");
+    idSpan.textContent = `(${activity.transactionId})`;
+
+    item.appendChild(separator5);
     item.appendChild(idSpan);
 
     activityList.appendChild(item);
