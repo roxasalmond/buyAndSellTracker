@@ -1,0 +1,26 @@
+@media (max-width: 768px) {
+  .main-container {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "sidebar"
+      "main"
+      "activity";
+  }
+
+  .sidebar {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .main-content {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .activity-history {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  /* ... rest of mobile styles */
+}

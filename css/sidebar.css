@@ -1,0 +1,92 @@
+.sidebar {
+  width: 390px;
+  background-color: #111111;
+  padding: 16px;
+  border-right: 1px solid #222222;
+  overflow-y: auto;
+}
+
+.header {
+  margin-bottom: 40px;
+}
+
+.logo {
+  width: 50px;
+  height: 50px;
+  margin-bottom: 15px;
+}
+
+.logo img {
+  width: 100%;
+  height: 100%;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.title span {
+  color: #9eff00;
+}
+
+/* Balance Summary */
+.balance-summary {
+  background-color: #1a1a1a;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 25px;
+}
+
+.balance-summary .title h3 {
+  font-size: 18px;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+.balance-summary .label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  color: #888888;
+  margin-bottom: 15px;
+}
+
+.balance-summary .label:last-child {
+  margin-bottom: 0;
+}
+
+.total-value,
+.total-fund {
+  font-size: 20px;
+  font-weight: 700;
+  color: #9eff00;
+}
+
+/* Income Summary */
+.income-summary {
+  background-color: #1a1a1a;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 30px;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.income-summary > div {
+  flex: 1;
+}
+
+.income-summary .label {
+  font-size: 12px;
+  color: #888888;
+  margin-bottom: 8px;
+}
+
+.income-amount {
+  font-size: 18px;
+  font-weight: 700;
+  color: #ffffff;
+}

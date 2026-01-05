@@ -1,0 +1,61 @@
+.activity-history {
+  display: flex;
+  flex-direction: column;
+  max-height: 30vh;
+  padding: 20px;
+  background: #1a1a1a;
+  border-radius: 8px;
+  overflow-y: auto;
+}
+
+.activity-history h2 {
+  margin-bottom: 15px;
+  color: #fff;
+}
+
+
+#activity-list {
+  list-style: none;
+  padding: 0;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.activity-item {
+  padding: 10px;
+  margin-bottom: 8px;
+  background: #222222;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #fff;
+}
+
+.activity-time {
+  color: #888;
+  font-size: 12px;
+}
+
+.activity-user {
+  font-weight: 600;
+  color: #9eff00;
+}
+
+.activity-action {
+  color: #fff;
+}
+
+.activity-item-name {
+  font-style: italic;
+  color: #aaa;
+}
+
+.activity-id {
+  color: #666;
+  font-size: 12px;
+}
+
+.no-activity {
+  color: #888;
+  text-align: center;
+  padding: 20px;
+}

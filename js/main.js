@@ -5,7 +5,7 @@ const database = firebase.database();
 auth.onAuthStateChanged((user) => {
   if (user) {
     console.log("Authenticated as:", user.email);
-    // Set up Firebase listener
+    // Set up Firebase listener - this already loads data automatically
     database.ref("transactions").on("value", (snapshot) => {
       const transactions = snapshot.val();
       console.log("Transactions loaded:", transactions);
@@ -62,5 +62,3 @@ historyTabButtons.forEach((button) => {
     document.getElementById(`${tabType}Table`).classList.add("active");
   });
 });
-
-

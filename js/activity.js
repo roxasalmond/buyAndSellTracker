@@ -7,11 +7,15 @@ function generateActivityFeed(transactions) {
   Object.entries(transactions).forEach(([id, trans]) => {
     // Skip auto-generated transactions linked to units
     if (trans.type === "expense" && trans.unitId) {
-      return;
+      return; // Auto-generated expense from unit
     }
     
     if (trans.type === "fund-return" && trans.unitId) {
-      return;
+      return; // Auto-generated fund return from sale
+    }
+    
+    if (trans.type === "income" && trans.unitId) {
+      return; // Auto-generated income from sale
     }
 
     // Created
@@ -23,7 +27,7 @@ function generateActivityFeed(transactions) {
       } else if (trans.type === "income" || trans.type === "fund" || trans.type === "fund-return") {
         amount = trans.amount;
       } else if (trans.type === "remit") {
-        amount = -trans.amount; // Negative for remittance
+        amount = -trans.amount;
       }
 
       activities.push({

@@ -1,0 +1,35 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  background-color: #0a0a0a;
+  color: #ffffff;
+}
+
+.main-container {
+  display: grid;
+  grid-template-columns: 390px 1fr;
+  grid-template-areas:
+    "sidebar main"
+    "activity activity";
+  gap: 20px;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.sidebar {
+  grid-area: sidebar;
+}
+
+.main-content {
+  grid-area: main;
+}
+
+.activity-history {
+  grid-area: activity;
+}

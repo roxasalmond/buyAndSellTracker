@@ -1,0 +1,181 @@
+.add-unit h3 {
+  font-size: 18px;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+/* Form Type Selector */
+.form-type-selector {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 25px;
+}
+
+.form-btn {
+  flex: 1;
+  padding: 10px 15px;
+  background-color: #1a1a1a;
+  color: #888888;
+  border: 1px solid #222222;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.form-btn:hover {
+  background-color: #222222;
+  color: #ffffff;
+}
+
+.form-btn.active {
+  background-color: #9eff00;
+  color: #000000;
+  border-color: #9eff00;
+  font-weight: 600;
+}
+
+/* Form Sections */
+.form-section {
+  display: none;
+}
+
+.form-section.active {
+  display: block;
+}
+
+.form-section form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.form-section input[type="text"],
+.form-section input[type="date"],
+.form-section input[type="number"] {
+  width: 100%;
+  padding: 12px 15px;
+  background-color: #1a1a1a;
+  border: 1px solid #222222;
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 14px;
+  transition: border-color 0.3s ease;
+}
+
+.form-section input:focus {
+  outline: none;
+  border-color: #9eff00;
+}
+
+.form-section input::placeholder {
+  color: #555555;
+}
+
+.form-section button[type="submit"] {
+  width: 100%;
+  padding: 14px;
+  background-color: #9eff00;
+  color: #000000;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 5px;
+}
+
+.form-section button[type="submit"]:hover {
+  background-color: #8ee600;
+  transform: translateY(-2px);
+}
+
+.form-section button[type="submit"]:active {
+  transform: translateY(0);
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 13px;
+  color: #888888;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.form-group input[type="text"],
+.form-group input[type="date"],
+.form-group select {
+  width: 100%;
+  padding: 12px 15px;
+  background-color: #1a1a1a;
+  border: 1px solid #222222;
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 14px;
+  transition: border-color 0.3s ease;
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="date"]:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #9eff00;
+}
+
+.form-group input::placeholder {
+  color: #555555;
+}
+
+.form-group select {
+  cursor: pointer;
+}
+
+.form-group select option {
+  background-color: #1a1a1a;
+  color: #ffffff;
+}
+
+.add-btn {
+  width: 100%;
+  padding: 14px;
+  background-color: #9eff00;
+  color: #000000;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 10px;
+}
+
+.add-btn:hover {
+  background-color: #8ee600;
+  transform: translateY(-2px);
+}
+
+.add-btn:active {
+  transform: translateY(0);
+}
+
+/* Sold input field */
+.sold-input {
+  width: 100px;
+  padding: 6px 10px;
+  background-color: #1a1a1a;
+  border: 1px solid #222222;
+  border-radius: 6px;
+  color: #ffffff;
+  font-size: 13px;
+}
+
+.sold-input:focus {
+  outline: none;
+  border-color: #9eff00;
+}
