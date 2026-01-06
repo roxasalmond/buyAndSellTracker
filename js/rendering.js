@@ -91,6 +91,13 @@ function renderTransactionsByType(transactions) {
       const actionCell = document.createElement("td");
       actionCell.setAttribute("data-label", "Action");
 
+      // CREATE EDIT
+      const editBtn = document.createElement("button");
+      editBtn.classList.add("edit-btn");
+      editBtn.textContent = "Edit";
+      editBtn.onclick = () => openEditModal(transaction.id, transaction);
+      actionCell.appendChild(editBtn);
+
       if (isSold) {
         // Create Delete button
         const deleteBtn = document.createElement("button");
@@ -161,6 +168,7 @@ function renderTransactionsByType(transactions) {
 
         actionCell.appendChild(deleteBtn);
         actionCell.appendChild(restoreBtn);
+        actionCell.appendChild(editBtn);
       } else {
         // Create Sell button
         const sellBtn = document.createElement("button");
@@ -268,6 +276,13 @@ function renderTransactionsByType(transactions) {
 
       const actionCell = document.createElement("td");
       actionCell.setAttribute("data-label", "Action");
+
+      // ADD EDIT BUTTON
+      const editBtn = document.createElement("button");
+      editBtn.classList.add("edit-btn");
+      editBtn.textContent = "Edit";
+      editBtn.onclick = () => openEditModal(transaction.id, transaction);
+      actionCell.appendChild(editBtn);
 
       // Create Delete button
       const deleteBtn = document.createElement("button");
@@ -393,6 +408,13 @@ function renderTransactionsByType(transactions) {
       const actionCell = document.createElement("td");
       actionCell.setAttribute("data-label", "Action");
 
+      // ADD EDIT BUTTON
+      const editBtn = document.createElement("button");
+      editBtn.classList.add("edit-btn");
+      editBtn.textContent = "Edit";
+      editBtn.onclick = () => openEditModal(transaction.id, transaction);
+      actionCell.appendChild(editBtn);
+
       // Create Delete button
       const deleteBtn = document.createElement("button");
       deleteBtn.classList.add("delete-btn");
@@ -415,7 +437,7 @@ function renderTransactionsByType(transactions) {
         await database.ref(`transactions/${transaction.id}`).update({
           deleted: false,
           restoredBy: auth.currentUser.email,
-          restoredAt: Date.now(), 
+          restoredAt: Date.now(),
         });
       };
 
