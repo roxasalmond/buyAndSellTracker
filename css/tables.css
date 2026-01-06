@@ -156,7 +156,12 @@ button[onclick*="deleteTransaction"]:hover {
   font-size: 12px;
   font-weight: 600;
   transition: all 0.3s ease;
-  display: flex;
+  /* display: flex; */
   align-items: center;
   justify-content: center;
+}
+
+td[data-label="Action"] {
+  display: flex;
+  gap: 8px;
 }

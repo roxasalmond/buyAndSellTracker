@@ -8,19 +8,180 @@
   }
 
   .sidebar {
-    grid-column: 1;
-    grid-row: 1;
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid #222222;
   }
 
   .main-content {
-    grid-column: 1;
-    grid-row: 2;
+    padding: 10px;
   }
 
+  .form-type-selector {
+    flex-direction: column;
+  }
+
+  .income-summary {
+    flex-direction: column;
+  }
+
+  /* Mobile Table - Vertical Stack */
+  .transaction-table {
+    display: block;
+    border-spacing: 0;
+    width: 100%;
+    overflow-x: hidden;
+  }
+
+  .transaction-table thead {
+    display: none !important;
+  }
+
+  .transaction-table thead tr,
+  .transaction-table thead th {
+    display: none !important;
+  }
+
+  .transaction-table tbody,
+  .transaction-table tr {
+    display: block;
+    width: 100%;
+  }
+
+  .transaction-table tbody tr {
+    background-color: #1a1a1a;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    padding: 15px;
+  }
+
+  .transaction-table tbody td {
+    display: block;
+    padding: 8px 0;
+    border-bottom: 1px solid #222222;
+    font-size: 14px;
+    text-align: left;
+    width: 100%;
+  }
+
+    .transaction-table tbody td[data-label="Action"] {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex-wrap: wrap; /* optional, if buttons should wrap */
+    align-items: flex-start;
+  }
+
+    .transaction-table tbody td[data-label="Action"] button {
+    display: inline-block;
+  }
+
+  .transaction-table tbody td:last-child {
+    border-bottom: none;
+  }
+
+  .transaction-table tbody td:last-child {
+    border-bottom: none;
+  }
+
+  .transaction-table tbody td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: #888888;
+    display: block;
+    margin-bottom: 4px;
+  }
+  
+
+  /* Activity History Mobile */
   .activity-history {
-    grid-column: 1;
-    grid-row: auto;
+    width: 100%;
+    padding: 15px;
+    margin-top: 0;
   }
 
-  /* ... rest of mobile styles */
+  .activity-history h2 {
+    font-size: 18px;
+    margin-bottom: 12px;
+  }
+
+  #activity-list {
+    max-height: 300px;
+  }
+
+  .activity-item {
+    padding: 12px;
+    font-size: 12px;
+    line-height: 1.5;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  .activity-time {
+    font-size: 10px;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .activity-user {
+    font-size: 12px;
+  }
+
+  .activity-item-name {
+    display: inline;
+    font-size: 11px;
+  }
+
+  .activity-id {
+    display: block;
+    margin-top: 4px;
+    font-size: 10px;
+  }
+  
+  .transaction-table tbody tr {
+    min-width: 300px; /* Adjust to your preference */
+    max-width: 340px;
+  }
+
+    .main-content {
+    padding: 10px;
+    overflow-x: hidden; /* Add this */
+  }
+
+    .transaction-table {
+    display: block;
+    border-spacing: 0;
+    width: 100%;
+    overflow-x: hidden; /* Add this */
+  }
+  .transaction-table tbody {
+    display: flex;
+    overflow-x: auto;
+    gap: 15px;
+    padding: 10px 0;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .transaction-table tbody tr {
+    min-width: 280px;
+    max-width: 280px;
+    flex-shrink: 0;
+    scroll-snap-align: start;
+    background-color: #1a1a1a;
+    border-radius: 8px;
+    margin-bottom: 0;
+    padding: 15px;
+  }
+
+  /* Hide scrollbar */
+  .transaction-table tbody::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .transaction-table tbody {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
 }
+
