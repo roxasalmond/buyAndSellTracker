@@ -1,3 +1,81 @@
+/* Large screens - Compact mode */
+@media (max-width: 1800px) {
+  .sidebar {
+    width: 100%;
+  }
+
+  .main-container {
+    gap: 10px;
+  }
+
+  .transaction-table th,
+  .transaction-table td {
+    padding: 8px 6px;
+    font-size: 12px;
+  }
+
+  .edit-btn,
+  .sell-btn,
+  .delete-btn,
+  .restore-btn,
+  .status-badge {
+    padding: 4px 8px;
+    font-size: 10px;
+    margin-right: 4px;
+  }
+
+  .sold-input {
+    width: 70px;
+    padding: 4px 6px;
+    font-size: 11px;
+  }
+
+  .transaction-table td[data-label="Status"],
+  .transaction-table td[data-label="Action"],
+  .transaction-table th{
+    white-space: nowrap;
+  }
+}
+
+/* Medium screens - Stack layout */
+@media (max-width: 1350px) {
+  .main-container {
+    grid-template-areas:
+      "sidebar"
+      "main"
+      "activity";
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid #222222;
+  }
+
+  .main-content {
+    padding: 20px;
+    width: 100%;
+  }
+  
+  .transaction-history,
+  .transaction-table {
+    width: 100%;
+  }
+
+  /* Restore Transaction ID when stacked */
+  .transaction-table th:first-child,
+  .transaction-table td:first-child {
+    display: table-cell;
+  }
+
+  .transaction-table td[data-label="Status"],
+  .transaction-table td[data-label="Action"] {
+    white-space: nowrap;
+  }
+}
+
+/* Mobile - Horizontal card slider */
 @media (max-width: 768px) {
   .main-container {
     grid-template-columns: 1fr;
@@ -15,6 +93,7 @@
 
   .main-content {
     padding: 10px;
+    overflow-x: hidden;
   }
 
   .form-type-selector {
@@ -25,7 +104,7 @@
     flex-direction: column;
   }
 
-  /* Mobile Table - Vertical Stack */
+  /* Mobile Table - Horizontal Cards */
   .transaction-table {
     display: block;
     border-spacing: 0;
@@ -37,61 +116,110 @@
     display: none !important;
   }
 
-  .transaction-table thead tr,
-  .transaction-table thead th {
-    display: none !important;
+  .transaction-table tbody {
+    display: flex;
+    overflow-x: auto;
+    gap: 15px;
+    padding: 10px 0;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 
-  .transaction-table tbody,
-  .transaction-table tr {
-    display: block;
-    width: 100%;
+  .transaction-table tbody::-webkit-scrollbar {
+    display: none;
   }
 
   .transaction-table tbody tr {
+    min-width: 85vw;
+    max-width: 85vw;
+    flex-shrink: 0;
+    scroll-snap-align: start;
     background-color: #1a1a1a;
     border-radius: 8px;
-    margin-bottom: 15px;
     padding: 15px;
-  }
-
-  .transaction-table tbody td {
     display: block;
-    padding: 8px 0;
-    border-bottom: 1px solid #222222;
-    font-size: 14px;
-    text-align: left;
-    width: 100%;
+    overflow: hidden;
+    box-sizing: border-box;
   }
 
-    .transaction-table tbody td[data-label="Action"] {
+  /* Horizontal label + value layout */
+  .transaction-table tbody td {
     display: flex;
-    flex-direction: column;
-    gap: 8px;
-    flex-wrap: wrap; /* optional, if buttons should wrap */
-    align-items: flex-start;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #222222;
+    font-size: 13px;
+    width: 100%;
+    background-color: transparent !important;
+    border-radius: 0 !important;
+    gap: 10px;
   }
 
-    .transaction-table tbody td[data-label="Action"] button {
-    display: inline-block;
+  .transaction-table tbody td:first-child,
+  .transaction-table tbody td:last-child {
+    border-radius: 0 !important;
   }
 
   .transaction-table tbody td:last-child {
     border-bottom: none;
   }
 
-  .transaction-table tbody td:last-child {
-    border-bottom: none;
-  }
-
+  /* Label styling */
   .transaction-table tbody td::before {
     content: attr(data-label);
     font-weight: 600;
     color: #888888;
-    display: block;
+    font-size: 12px;
+    flex-shrink: 0;
+    min-width: 90px;
+  }
+
+  /* Value area */
+  .transaction-table tbody td {
+    text-align: right;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  /* Sold For cell with input and button */
+  .transaction-table tbody td[data-label="Sold For"] {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .transaction-table tbody td[data-label="Sold For"] .sold-input {
+    flex: 1;
+    max-width: 80px;
+    margin-right: 8px;
+  }
+
+  .transaction-table tbody td[data-label="Sold For"] .sell-btn {
+    flex-shrink: 0;
+  }
+
+  /* Action buttons stacked vertically */
+  .transaction-table tbody td[data-label="Action"] {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .transaction-table tbody td[data-label="Action"]::before {
+    width: 100%;
+    text-align: left;
     margin-bottom: 4px;
   }
-  
+
+  .transaction-table tbody td[data-label="Action"] button {
+    width: 100%;
+    margin: 0 !important;
+    box-sizing: border-box;
+  }
 
   /* Activity History Mobile */
   .activity-history {
@@ -137,51 +265,4 @@
     margin-top: 4px;
     font-size: 10px;
   }
-  
-  .transaction-table tbody tr {
-    min-width: 300px; /* Adjust to your preference */
-    max-width: 340px;
-  }
-
-    .main-content {
-    padding: 10px;
-    overflow-x: hidden; /* Add this */
-  }
-
-    .transaction-table {
-    display: block;
-    border-spacing: 0;
-    width: 100%;
-    overflow-x: hidden; /* Add this */
-  }
-  .transaction-table tbody {
-    display: flex;
-    overflow-x: auto;
-    gap: 15px;
-    padding: 10px 0;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .transaction-table tbody tr {
-    min-width: 280px;
-    max-width: 280px;
-    flex-shrink: 0;
-    scroll-snap-align: start;
-    background-color: #1a1a1a;
-    border-radius: 8px;
-    margin-bottom: 0;
-    padding: 15px;
-  }
-
-  /* Hide scrollbar */
-  .transaction-table tbody::-webkit-scrollbar {
-    display: none;
-  }
-  
-  .transaction-table tbody {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
 }
-

@@ -205,3 +205,16 @@ table {
   text-align: left;
   background-color: #1a1a1a;
 }
+
+.transaction-history {
+  width: 100%;
+}
+
+.transaction-table {
+  width: 100%;
+  table-layout: auto; /* or fixed */
+}
+
+.transaction-table tbody tr {
+  width: 100%;
+}
