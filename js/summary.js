@@ -27,8 +27,10 @@ function updateSummary(transactions) {
       } else if (transaction.type === "remit") {
         totalFund -= transaction.amount || 0;
       } else if (transaction.type === "expense") {
-        // ADD THIS
         totalFund -= transaction.amount || 0;
+      } else if (transaction.type === "income") {
+        totalIncome += transaction.profit || 0;
+        totalDivided += transaction.dividedAmount || 0;
       }
     });
   }

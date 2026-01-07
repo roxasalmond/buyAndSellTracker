@@ -79,40 +79,53 @@ function renderTransactionsByType(transactions) {
         soldCell.classList.add("income");
         soldCell.textContent = `₱${transaction.soldFor.toFixed(2)}`;
       } else {
+        // Create a container for input + button in soldCell (MOVED HERE)
+        const soldContainer = document.createElement("div");
+        soldContainer.style.display = "flex";
+        soldContainer.style.gap = "8px";
+        soldContainer.style.alignItems = "center";
+
         const soldInput = document.createElement("input");
         soldInput.type = "number";
         soldInput.classList.add("sold-input");
         soldInput.id = `sold-${transaction.id}`;
         soldInput.placeholder = "₱ 0.00";
         soldInput.step = "0.01";
-        soldCell.appendChild(soldInput);
+
+        // Sell button in soldCell now
+        const sellBtn = document.createElement("button");
+        sellBtn.classList.add("sell-btn");
+        sellBtn.textContent = "Sell";
+        sellBtn.onclick = () => sellUnit(transaction.id);
+
+        soldContainer.appendChild(soldInput);
+        soldContainer.appendChild(sellBtn);
+        soldCell.appendChild(soldContainer);
       }
 
+      // After the soldCell if/else, create actionCell
       const actionCell = document.createElement("td");
       actionCell.setAttribute("data-label", "Action");
 
-      // CREATE EDIT
+      // CREATE EDIT BUTTON
       const editBtn = document.createElement("button");
       editBtn.classList.add("edit-btn");
       editBtn.textContent = "Edit";
       editBtn.onclick = () => openEditModal(transaction.id, transaction);
-      actionCell.appendChild(editBtn);
 
       if (isSold) {
-        // Create Delete button
+        // For sold items: Edit, Delete, Restore
         const deleteBtn = document.createElement("button");
         deleteBtn.classList.add("delete-btn");
         deleteBtn.textContent = "Delete";
         deleteBtn.onclick = async () => {
           if (confirm("Are you sure you want to delete this transaction?")) {
-            // Soft delete the unit
             await database.ref(`transactions/${transaction.id}`).update({
               deleted: true,
               deletedAt: Date.now(),
               deletedBy: auth.currentUser.email,
             });
 
-            // Also soft delete related income and fund-return
             const allTransactions = await database
               .ref("transactions")
               .once("value");
@@ -130,7 +143,6 @@ function renderTransactionsByType(transactions) {
           }
         };
 
-        // Create Restore button
         const restoreBtn = document.createElement("button");
         restoreBtn.classList.add("restore-btn");
         restoreBtn.textContent = "Restore";
@@ -157,7 +169,6 @@ function renderTransactionsByType(transactions) {
           });
         };
 
-        // Show/hide based on deleted status
         if (transaction.deleted) {
           deleteBtn.style.display = "none";
           restoreBtn.style.display = "inline-block";
@@ -166,17 +177,11 @@ function renderTransactionsByType(transactions) {
           restoreBtn.style.display = "none";
         }
 
+        actionCell.appendChild(editBtn);
         actionCell.appendChild(deleteBtn);
         actionCell.appendChild(restoreBtn);
-        actionCell.appendChild(editBtn);
       } else {
-        // Create Sell button
-        const sellBtn = document.createElement("button");
-        sellBtn.classList.add("sell-btn");
-        sellBtn.textContent = "Sell";
-        sellBtn.onclick = () => sellUnit(transaction.id);
-
-        // Create Delete button
+        // For in-stock items: Edit, Delete, Restore (NO SELL BUTTON HERE)
         const deleteBtn = document.createElement("button");
         deleteBtn.classList.add("delete-btn");
         deleteBtn.textContent = "Delete";
@@ -184,10 +189,8 @@ function renderTransactionsByType(transactions) {
           if (
             confirm("Are you sure you want to permanently delete this unit?")
           ) {
-            // Hard delete the unit
             await database.ref(`transactions/${transaction.id}`).remove();
 
-            // Also delete the associated expense
             const allTransactions = await database
               .ref("transactions")
               .once("value");
@@ -200,7 +203,6 @@ function renderTransactionsByType(transactions) {
           }
         };
 
-        // Create Restore button
         const restoreBtn = document.createElement("button");
         restoreBtn.classList.add("restore-btn");
         restoreBtn.textContent = "Restore";
@@ -212,18 +214,15 @@ function renderTransactionsByType(transactions) {
           });
         };
 
-        // Show/hide based on deleted status
         if (transaction.deleted) {
-          sellBtn.style.display = "none";
           deleteBtn.style.display = "none";
           restoreBtn.style.display = "inline-block";
         } else {
-          sellBtn.style.display = "inline-block";
           deleteBtn.style.display = "inline-block";
           restoreBtn.style.display = "none";
         }
 
-        actionCell.appendChild(sellBtn);
+        actionCell.appendChild(editBtn);
         actionCell.appendChild(deleteBtn);
         actionCell.appendChild(restoreBtn);
       }
