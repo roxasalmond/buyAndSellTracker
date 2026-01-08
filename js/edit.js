@@ -1,36 +1,52 @@
 // Open edit modal
 function openEditModal(transactionId, transaction) {
-  const modal = document.getElementById('editModal');
-  const editId = document.getElementById('editId');
-  const editType = document.getElementById('editType');
-  
+  const modal = document.getElementById("editModal");
+  const editId = document.getElementById("editId");
+  const editType = document.getElementById("editType");
+
   // Set transaction ID and type
   editId.value = transactionId;
   editType.value = transaction.type;
-  
+
   // Hide all field groups
-  document.querySelectorAll('.edit-fields').forEach(field => {
-    field.style.display = 'none';
+  document.querySelectorAll(".edit-fields").forEach((field) => {
+    field.style.display = "none";
   });
-  
+
   // Show and populate appropriate fields based on type
-  if (transaction.type === 'unit') {
-    document.getElementById('editUnitFields').style.display = 'block';
-    document.getElementById('editUnitName').value = transaction.name || '';
-    document.getElementById('editUnitCondition').value = transaction.condition || '';
-    document.getElementById('editUnitDate').value = transaction.date || '';
-    document.getElementById('editUnitCost').value = transaction.cost || 0;
-  } else if (transaction.type === 'fund' || transaction.type === 'fund-return') {
-    document.getElementById('editFundFields').style.display = 'block';
-    document.getElementById('editFundDate').value = transaction.date || '';
-    document.getElementById('editFundAmount').value = transaction.amount || 0;
-  } else if (transaction.type === 'remit') {
-    document.getElementById('editRemitFields').style.display = 'block';
-    document.getElementById('editRemitDate').value = transaction.date || '';
-    document.getElementById('editRemitAmount').value = transaction.amount || 0;
+  if (transaction.type === "unit") {
+    document.getElementById("editUnitFields").style.display = "block";
+    document.getElementById("editUnitName").value = transaction.name || "";
+    document.getElementById("editUnitCategory").value =
+      transaction.category || "";
+    document.getElementById("editUnitImei").value = transaction.imei || "";
+    document.getElementById("editUnitCondition").value =
+      transaction.condition || "";
+    document.getElementById("editUnitDate").value = transaction.date || "";
+    document.getElementById("editUnitCost").value = transaction.cost || 0;
+    document.getElementById('editUnitSold').value = transaction.soldFor || '';
+  } else if (
+    transaction.type === "fund" ||
+    transaction.type === "fund-return"
+  ) {
+    document.getElementById("editFundFields").style.display = "block";
+    document.getElementById("editFundDate").value = transaction.date || "";
+    document.getElementById("editFundAmount").value = transaction.amount || 0;
+  } else if (transaction.type === "remit") {
+    document.getElementById("editRemitFields").style.display = "block";
+    document.getElementById("editRemitDate").value = transaction.date || "";
+    document.getElementById("editRemitAmount").value = transaction.amount || 0;
   }
-  
-  modal.style.display = 'block';
+
+    const editImeiInput = document.getElementById('editUnitImei');
+  if (transaction.category === 'Android' || transaction.category === 'IOS') {
+    editImeiInput.style.display = 'block';
+  } else {
+    editImeiInput.style.display = 'none';
+  }
+
+
+  modal.style.display = "block";
 }
 
 // Close edit modal
@@ -52,11 +68,18 @@ async function saveEdit(e) {
     editedAt: Date.now()
   };
   
-  if (transactionType === 'unit') {
-    updateData.name = document.getElementById('editUnitName').value;
-    updateData.condition = document.getElementById('editUnitCondition').value;
-    updateData.date = document.getElementById('editUnitDate').value;
-    updateData.cost = parseFloat(document.getElementById('editUnitCost').value);
+if (transactionType === 'unit') {
+  updateData.name = document.getElementById('editUnitName').value;
+  updateData.category = document.getElementById('editUnitCategory').value;
+  updateData.imei = document.getElementById('editUnitImei').value;
+  updateData.condition = document.getElementById('editUnitCondition').value;
+  updateData.date = document.getElementById('editUnitDate').value;
+  updateData.cost = parseFloat(document.getElementById('editUnitCost').value);
+
+  const soldValue = document.getElementById('editUnitSold').value;
+  updateData.status = soldValue ? 'sold' : 'in-stock';
+  updateData.soldFor = soldValue ? parseFloat(soldValue) : null;
+
   } else if (transactionType === 'fund' || transactionType === 'fund-return') {
     updateData.date = document.getElementById('editFundDate').value;
     updateData.amount = parseFloat(document.getElementById('editFundAmount').value);
@@ -101,5 +124,21 @@ document.addEventListener('DOMContentLoaded', () => {
   const editForm = document.getElementById('editForm');
   if (editForm) {
     editForm.addEventListener('submit', saveEdit);
+  }
+
+  const editCategorySelect = document.getElementById('editUnitCategory');
+  if (editCategorySelect) {
+    editCategorySelect.addEventListener('change', function(e) {
+      const editImeiInput = document.getElementById('editUnitImei');
+      
+      if (e.target.value === 'Android' || e.target.value === 'IOS') {
+        editImeiInput.style.display = 'block';
+        editImeiInput.required = true;
+      } else {
+        editImeiInput.style.display = 'none';
+        editImeiInput.required = false;
+        editImeiInput.value = '';
+      }
+    });
   }
 });

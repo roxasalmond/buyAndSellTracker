@@ -44,6 +44,10 @@ function renderTransactionsByType(transactions) {
       nameCell.setAttribute("data-label", "Unit Name");
       nameCell.textContent = transaction.name;
 
+      const imeiCell = document.createElement("td");
+      imeiCell.setAttribute("data-label", "IMEI");
+      imeiCell.textContent = transaction.imei || "-";
+
       const conditionCell = document.createElement("td");
       conditionCell.setAttribute("data-label", "Condition");
       conditionCell.textContent = transaction.condition;
@@ -229,6 +233,7 @@ function renderTransactionsByType(transactions) {
 
       row.appendChild(transactionIdCell);
       row.appendChild(nameCell);
+      row.appendChild(imeiCell);
       row.appendChild(conditionCell);
       row.appendChild(dateCell);
       row.appendChild(costCell);

@@ -11,6 +11,8 @@ document.getElementById("unitForm").addEventListener("submit", async (e) => {
     type: "unit",
     transactionId: transactionId,
     name: document.getElementById("unitName").value,
+    category: document.getElementById("unitCategory").value,
+    imei: document.getElementById("unitImei").value,
     condition: document.getElementById("unitCondition").value,
     date: document.getElementById("unitDate").value,
     cost: cost,
@@ -103,4 +105,20 @@ document.getElementById("remitForm").addEventListener("submit", async (e) => {
     console.error("Error recording remittance:", error);
     alert("Failed to record remittance");
   }
+});
+
+// Show/hide IMEI input based on unit category
+document.addEventListener('DOMContentLoaded', function() {
+  document.getElementById('unitCategory').addEventListener('change', function(e) {
+    const imeiInput = document.getElementById('unitImei');
+    
+    if (e.target.value === 'Android' || e.target.value === 'IOS') {
+      imeiInput.style.display = 'block';
+      imeiInput.required = true;
+    } else {
+      imeiInput.style.display = 'none';
+      imeiInput.required = false;
+      imeiInput.value = '';
+    }
+  });
 });

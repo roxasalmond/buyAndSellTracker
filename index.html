@@ -65,7 +65,7 @@
         </div>
       </div>
 
-      <div class="income-summary">       
+      <div class="income-summary">
         <div>
           <div class="label"><span>Total Income</span></div>
           <div class="income-amount" id="totalIncome">₱0.00</div>
@@ -95,7 +95,19 @@
         <div id="unitFormSection" class="form-section active">
           <form id="unitForm">
             <input type="text" id="unitName" placeholder="Unit Name" required />
-            <input type="text" id="unitCondition" placeholder="Condition" required />
+            <select id="unitCategory" required>
+              <option value="" disabled selected>Android, IOS, Laptop</option>
+              <option value="Android">Android</option>
+              <option value="IOS">iOS</option>
+              <option value="Laptop">Laptop</option>
+            </select>
+            <input type="text" id="unitImei" placeholder="IMEI" style="display: none;" />
+            <select id="unitCondition" required>
+              <option value="" disabled selected>Condition</option>
+              <option value="Brandnew">Brandnew</option>
+              <option value="Second Hand">Second Hand</option>
+              <option value="Refurbished">Refurbished</option>
+            </select>
             <input type="date" id="unitDate" required />
             <input type="number" id="unitAmount" placeholder="Cost" step="0.01" required />
             <button type="submit">Add Unit</button>
@@ -145,6 +157,7 @@
               <tr>
                 <th>Transaction ID</th>
                 <th>Unit Name</th>
+                <th>IMEI</th>
                 <th>Condition</th>
                 <th>Date</th>
                 <th>Cost</th>
@@ -211,17 +224,45 @@
             <label for="editUnitName">Unit Name</label>
             <input type="text" id="editUnitName">
           </div>
+
+          <div class="form-group">
+            <label for="editUnitCategory">Category</label>
+            <select id="editUnitCategory">
+              <option value="" disabled>Select category</option>
+              <option value="Android">Android</option>
+              <option value="IOS">iOS</option>
+              <option value="Laptop">Laptop</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="editUnitImei">IMEI</label>
+            <input type="text" id="editUnitImei">
+          </div>
+
           <div class="form-group">
             <label for="editUnitCondition">Condition</label>
-            <input type="text" id="editUnitCondition">
+            <select id="editUnitCondition">
+              <option value="" disabled>Condition</option>
+              <option value="Brandnew">Brandnew</option>
+              <option value="Second Hand">Second Hand</option>
+              <option value="Refurbished">Refurbished</option>
+            </select>
           </div>
+
           <div class="form-group">
             <label for="editUnitDate">Date</label>
             <input type="date" id="editUnitDate">
           </div>
+          
           <div class="form-group">
             <label for="editUnitCost">Cost</label>
             <input type="number" id="editUnitCost" step="0.01">
+          </div>
+          
+          <div class="form-group">
+            <label for="editUnitSold">Sold For</label>
+            <input type="number" id="editUnitSold" step="0.01" placeholder="Leave empty if not sold">
           </div>
         </div>
 
@@ -257,6 +298,36 @@
     </div>
   </div>
 
+  <!-- Fund fields -->
+  <div id="editFundFields" class="edit-fields" style="display: none;">
+    <div class="form-group">
+      <label for="editFundDate">Date</label>
+      <input type="date" id="editFundDate">
+    </div>
+    <div class="form-group">
+      <label for="editFundAmount">Amount</label>
+      <input type="number" id="editFundAmount" step="0.01">
+    </div>
+  </div>
+
+  <!-- Remit fields -->
+  <div id="editRemitFields" class="edit-fields" style="display: none;">
+    <div class="form-group">
+      <label for="editRemitDate">Date</label>
+      <input type="date" id="editRemitDate">
+    </div>
+    <div class="form-group">
+      <label for="editRemitAmount">Amount</label>
+      <input type="number" id="editRemitAmount" step="0.01">
+    </div>
+  </div>
+
+  <div class="modal-actions">
+    <button type="button" class="cancel-btn" id="cancelEdit">Cancel</button>
+    <button type="submit" class="save-btn">Save Changes</button>
+  </div>
+  <script src="js/forms.js"></script>
+  <script src="js/edit.js"></script>
 </body>
 <!--scripts in order-->
 <script src="js/utils.js"></script>
@@ -264,7 +335,7 @@
 <script src="js/sellUnit.js"></script>
 <script src="js/rendering.js"></script>
 <script src="js/activity.js"></script>
-<script src="js/forms.js"></script>
+
 <script src="js/main.js"></script>
-<script src="js/edit.js"></script>
+
 </html>

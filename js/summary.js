@@ -16,9 +16,11 @@ function updateSummary(transactions) {
       }
 
       // Calculate based on type
-      if (transaction.type === "unit" && transaction.status === "in-stock") {
-        // Only count unsold units in inventory
-        totalInventoryValue += transaction.cost || 0;
+      if (transaction.type === "unit") {
+        if (transaction.status === "in-stock") {
+          // Unsold units: add to inventory, subtract cost from fund
+          totalInventoryValue += transaction.cost || 0;
+        }
       } else if (
         transaction.type === "fund" ||
         transaction.type === "fund-return"
@@ -31,6 +33,8 @@ function updateSummary(transactions) {
       } else if (transaction.type === "income") {
         totalIncome += transaction.profit || 0;
         totalDivided += transaction.dividedAmount || 0;
+        // Return cost + half the profit to fund
+        // totalFund += (transaction.cost || 0) + ((transaction.profit || 0) / 2);
       }
     });
   }
