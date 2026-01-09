@@ -1,30 +1,35 @@
 .sidebar {
   width: 390px;
-  background-color: #ececde;
+  background-color: var(--bg-content);
   padding: 16px;
-  border: 1px solid #222222;
+  border: 1px solid var(--border-color);
   overflow-y: auto;
-  border-radius: 16px;
+  border-radius: var(--radius-xl);
+  color: var(--text-on-light);
 }
 
 .header {
   margin-bottom: 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .title {
   font-size: 28px;
   font-weight: 700;
+  color: var(--text-on-light);
 }
 
 .title span {
-  color: #9eff00;
+  color: var(--accent-primary);
 }
 
 /* Balance Summary */
 .balance-summary {
-  background-color: #f5f5f5;
+  background-color: var(--bg-summary);
   padding: 20px;
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   margin-bottom: 25px;
 }
 
@@ -32,6 +37,7 @@
   font-size: 18px;
   margin-bottom: 20px;
   font-weight: 600;
+  color: var(--text-on-light);
 }
 
 .balance-summary .label {
@@ -39,7 +45,7 @@
   justify-content: space-between;
   align-items: center;
   font-size: 14px;
-  color: #888888;
+  color: var(--text-secondary);
   margin-bottom: 15px;
 }
 
@@ -51,14 +57,14 @@
 .total-fund {
   font-size: 20px;
   font-weight: 700;
-  color: #9eff00;
+  color: var(--accent-primary);
 }
 
 /* Income Summary */
 .income-summary {
-  background-color: #f5f5f5;
+  background-color: var(--bg-summary);
   padding: 12px;
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   margin-bottom: 30px;
   display: flex;
   justify-content: space-between;
@@ -71,12 +77,12 @@
 
 .income-summary .label {
   font-size: 12px;
-  color: #888888;
+  color: var(--text-secondary);
   margin-bottom: 8px;
 }
 
 .income-amount {
   font-size: 18px;
   font-weight: 700;
-  color: #9eff00;
+  color: var(--accent-primary);
 }

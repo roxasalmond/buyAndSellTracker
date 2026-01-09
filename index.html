@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="That's how you use JavaScript!" />
   <title>Tracker</title>
+  <link rel="stylesheet" href="css/variables.css">
   <link rel="stylesheet" href="css/main.css">
 </head>
 
@@ -254,16 +255,17 @@
             <label for="editUnitDate">Date</label>
             <input type="date" id="editUnitDate">
           </div>
-          
+
           <div class="form-group">
             <label for="editUnitCost">Cost</label>
             <input type="number" id="editUnitCost" step="0.01">
           </div>
-          
+
           <div class="form-group">
             <label for="editUnitSold">Sold For</label>
             <input type="number" id="editUnitSold" step="0.01" placeholder="Leave empty if not sold">
           </div>
+
         </div>
 
         <!-- Fund fields -->
@@ -297,45 +299,14 @@
       </form>
     </div>
   </div>
-
-  <!-- Fund fields -->
-  <div id="editFundFields" class="edit-fields" style="display: none;">
-    <div class="form-group">
-      <label for="editFundDate">Date</label>
-      <input type="date" id="editFundDate">
-    </div>
-    <div class="form-group">
-      <label for="editFundAmount">Amount</label>
-      <input type="number" id="editFundAmount" step="0.01">
-    </div>
-  </div>
-
-  <!-- Remit fields -->
-  <div id="editRemitFields" class="edit-fields" style="display: none;">
-    <div class="form-group">
-      <label for="editRemitDate">Date</label>
-      <input type="date" id="editRemitDate">
-    </div>
-    <div class="form-group">
-      <label for="editRemitAmount">Amount</label>
-      <input type="number" id="editRemitAmount" step="0.01">
-    </div>
-  </div>
-
-  <div class="modal-actions">
-    <button type="button" class="cancel-btn" id="cancelEdit">Cancel</button>
-    <button type="submit" class="save-btn">Save Changes</button>
-  </div>
-  <script src="js/forms.js"></script>
-  <script src="js/edit.js"></script>
+  <!-- Load scripts in dependency order -->
+  <script src="js/utils.js"></script>      <!-- 1. Utilities first (used by others) -->
+  <script src="js/summary.js"></script>    <!-- 2. Summary calculations -->
+  <script src="js/sellUnit.js"></script>   <!-- 3. Sell unit logic -->
+  <script src="js/rendering.js"></script>  <!-- 4. Rendering functions -->
+  <script src="js/activity.js"></script>   <!-- 5. Activity logging -->
+  <script src="js/forms.js"></script>      <!-- 6. Form handling -->
+  <script src="js/edit.js"></script>       <!-- 7. Edit modal -->
+  <script src="js/main.js"></script>       <!-- 8. Main initialization (LAST) -->
 </body>
-<!--scripts in order-->
-<script src="js/utils.js"></script>
-<script src="js/summary.js"></script>
-<script src="js/sellUnit.js"></script>
-<script src="js/rendering.js"></script>
-<script src="js/activity.js"></script>
-
-<script src="js/main.js"></script>
-
 </html>

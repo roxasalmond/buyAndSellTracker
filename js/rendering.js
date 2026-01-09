@@ -281,12 +281,14 @@ function renderTransactionsByType(transactions) {
       const actionCell = document.createElement("td");
       actionCell.setAttribute("data-label", "Action");
 
-      // ADD EDIT BUTTON
-      const editBtn = document.createElement("button");
-      editBtn.classList.add("edit-btn");
-      editBtn.textContent = "Edit";
-      editBtn.onclick = () => openEditModal(transaction.id, transaction);
-      actionCell.appendChild(editBtn);
+      // Only show edit button if NOT a fund-return from a sale
+      if (!(transaction.type === "fund-return" && transaction.unitId)) {
+        const editBtn = document.createElement("button");
+        editBtn.classList.add("edit-btn");
+        editBtn.textContent = "Edit";
+        editBtn.onclick = () => openEditModal(transaction.id, transaction);
+        actionCell.appendChild(editBtn);
+      }
 
       // Create Delete button
       const deleteBtn = document.createElement("button");

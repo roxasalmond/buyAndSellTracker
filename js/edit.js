@@ -68,28 +68,70 @@ async function saveEdit(e) {
     editedAt: Date.now()
   };
   
-if (transactionType === 'unit') {
-  updateData.name = document.getElementById('editUnitName').value;
-  updateData.category = document.getElementById('editUnitCategory').value;
-  updateData.imei = document.getElementById('editUnitImei').value;
-  updateData.condition = document.getElementById('editUnitCondition').value;
-  updateData.date = document.getElementById('editUnitDate').value;
-  updateData.cost = parseFloat(document.getElementById('editUnitCost').value);
+  if (transactionType === 'unit') {
+    updateData.name = document.getElementById('editUnitName').value;
+    updateData.category = document.getElementById('editUnitCategory').value;
+    updateData.imei = document.getElementById('editUnitImei').value;
+    updateData.condition = document.getElementById('editUnitCondition').value;
+    updateData.date = document.getElementById('editUnitDate').value;
+    updateData.cost = parseFloat(document.getElementById('editUnitCost').value);
 
-  const soldValue = document.getElementById('editUnitSold').value;
-  updateData.status = soldValue ? 'sold' : 'in-stock';
-  updateData.soldFor = soldValue ? parseFloat(soldValue) : null;
+    const soldValue = document.getElementById('editUnitSold').value;
+    updateData.status = soldValue ? 'sold' : 'in-stock';
+    updateData.soldFor = soldValue ? parseFloat(soldValue) : null;
+
+    // Update the unit
+    await database.ref(`transactions/${transactionId}`).update(updateData);
+
+    // If unit is sold, update related income and fund-return transactions
+    if (soldValue) {
+      const soldAmount = parseFloat(soldValue);
+      const cost = updateData.cost;
+      const profit = soldAmount - cost;
+
+      // Find related transactions by unitId
+      const allTransactionsSnapshot = await database.ref('transactions').once('value');
+      const allTransactions = allTransactionsSnapshot.val();
+
+      if (allTransactions) {
+        Object.keys(allTransactions).forEach(async (key) => {
+          const transaction = allTransactions[key];
+          
+          // Update income transaction
+          if (transaction.type === 'income' && transaction.unitId === transactionId) {
+            const halfProfit = profit / 2;
+            await database.ref(`transactions/${key}`).update({
+              profit: profit,
+              dividedAmount: halfProfit,
+              editedBy: auth.currentUser.email,
+              editedAt: Date.now()
+            });
+          }
+          
+          // Update fund-return transaction
+          if (transaction.type === 'fund-return' && transaction.unitId === transactionId) {
+            const halfProfit = profit / 2;
+            await database.ref(`transactions/${key}`).update({
+              amount: cost + halfProfit,
+              editedBy: auth.currentUser.email,
+              editedAt: Date.now()
+            });
+          }
+        });
+      }
+    }
 
   } else if (transactionType === 'fund' || transactionType === 'fund-return') {
     updateData.date = document.getElementById('editFundDate').value;
     updateData.amount = parseFloat(document.getElementById('editFundAmount').value);
+    await database.ref(`transactions/${transactionId}`).update(updateData);
   } else if (transactionType === 'remit') {
     updateData.date = document.getElementById('editRemitDate').value;
     updateData.amount = parseFloat(document.getElementById('editRemitAmount').value);
+    await database.ref(`transactions/${transactionId}`).update(updateData);
   }
   
   try {
-    await database.ref(`transactions/${transactionId}`).update(updateData);
     closeEditModal();
     alert('Transaction updated successfully!');
   } catch (error) {

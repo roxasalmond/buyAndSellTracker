@@ -32,7 +32,7 @@
 
   .transaction-table td[data-label="Status"],
   .transaction-table td[data-label="Action"],
-  .transaction-table th{
+  .transaction-table th {
     white-space: nowrap;
   }
 }
@@ -50,14 +50,14 @@
   .sidebar {
     width: 100%;
     border-right: none;
-    border-bottom: 1px solid #222222;
+    border-bottom: 1px solid var(--border-color);
   }
 
   .main-content {
     padding: 20px;
     width: 100%;
   }
-  
+
   .transaction-history,
   .transaction-table {
     width: 100%;
@@ -88,7 +88,7 @@
   .sidebar {
     width: 100%;
     border-right: none;
-    border-bottom: 1px solid #222222;
+    border-bottom: 1px solid var(--border-color);
   }
 
   .main-content {
@@ -136,8 +136,8 @@
     max-width: 85vw;
     flex-shrink: 0;
     scroll-snap-align: start;
-    background-color: #1a1a1a;
-    border-radius: 8px;
+    background-color: var(--bg-primary);
+    border-radius: var(--radius-md);
     padding: 15px;
     display: block;
     overflow: hidden;
@@ -150,7 +150,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 10px 0;
-    border-bottom: 1px solid #222222;
+    border-bottom: 1px solid var(--border-color);
     font-size: 13px;
     width: 100%;
     background-color: transparent !important;
@@ -171,7 +171,7 @@
   .transaction-table tbody td::before {
     content: attr(data-label);
     font-weight: 600;
-    color: #888888;
+    color: var(--text-secondary);
     font-size: 12px;
     flex-shrink: 0;
     min-width: 90px;

@@ -1,108 +1,109 @@
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background-color: #0a0a0a;
-    color: #ffffff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background-color: var(--bg-dark);
+  color: var(--text-primary);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
 }
 
 .login-container {
-    background-color: #111111;
-    padding: 40px;
-    border-radius: 12px;
-    width: 100%;
-    max-width: 400px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  background-color: var(--bg-card);
+  padding: 40px;
+  border-radius: var(--radius-lg);
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
 h1 {
-    font-size: 28px;
-    margin-bottom: 10px;
+  font-size: 28px;
+  margin-bottom: 10px;
 }
 
 h1 span {
-    color: #9EFF00;
+  color: var(--accent-primary);
 }
 
 .subtitle {
-    color: #888888;
-    margin-bottom: 30px;
-    font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 30px;
+  font-size: 14px;
 }
 
 .form-group {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 label {
-    display: block;
-    font-size: 13px;
-    color: #888888;
-    margin-bottom: 8px;
+  display: block;
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
 }
 
 input {
-    width: 100%;
-    padding: 12px 15px;
-    background-color: #1a1a1a;
-    border: 1px solid #222222;
-    border-radius: 8px;
-    color: #ffffff;
-    font-size: 14px;
+  width: 100%;
+  padding: 12px 15px;
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 14px;
+  transition: border-color var(--transition-normal);
 }
 
 input:focus {
-    outline: none;
-    border-color: #9EFF00;
+  outline: none;
+  border-color: var(--accent-primary);
 }
 
 .login-btn {
-    width: 100%;
-    padding: 14px;
-    background-color: #9EFF00;
-    color: #000000;
-    border: none;
-    border-radius: 8px;
-    font-size: 15px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    margin-top: 10px;
+  width: 100%;
+  padding: 14px;
+  background-color: var(--accent-primary);
+  color: var(--accent-dark);
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  margin-top: 10px;
 }
 
 .login-btn:hover {
-    background-color: #8ee600;
-    transform: translateY(-2px);
+  background-color: var(--accent-hover);
+  transform: translateY(-2px);
 }
 
 .login-btn:disabled {
-    background-color: #333333;
-    color: #666666;
-    cursor: not-allowed;
-    transform: none;
+  background-color: var(--bg-hover);
+  color: var(--text-disabled);
+  cursor: not-allowed;
+  transform: none;
 }
 
 .message {
-    padding: 12px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    font-size: 14px;
-    display: none;
+  padding: 12px;
+  border-radius: var(--radius-md);
+  margin-bottom: 20px;
+  font-size: 14px;
+  display: none;
 }
 
 .message.show {
-    display: block;
+  display: block;
 }
 
 .error-message {
-    background-color: #ff4444;
-    color: white;
+  background-color: var(--error-bg);
+  color: var(--text-primary);
 }

@@ -1,3 +1,4 @@
+@import url('variables.css');  /* ← FIRST - defines all variables */
 @import url('base.css');
 @import url('sidebar.css');
 @import url('forms.css');

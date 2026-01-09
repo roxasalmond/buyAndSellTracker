@@ -3,16 +3,15 @@
   flex-direction: column;
   max-height: 30vh;
   padding: 20px;
-  background: #1a1a1a;
-  border-radius: 8px;
+  background: var(--bg-primary);
+  border-radius: var(--radius-md);
   overflow-y: auto;
 }
 
 .activity-history h2 {
   margin-bottom: 15px;
-  color: #fff;
+  color: var(--text-primary);
 }
-
 
 #activity-list {
   list-style: none;
@@ -24,39 +23,38 @@
 .activity-item {
   padding: 10px;
   margin-bottom: 8px;
-  background: #222222;
-  border-radius: 4px;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-sm);
   font-size: 14px;
-  color: #fff;
+  color: var(--text-primary);
 }
 
 .activity-time {
-  color: #888;
+  color: var(--text-secondary);
   font-size: 12px;
 }
 
 .activity-user {
   font-weight: 600;
-  color: #9eff00;
+  color: var(--accent-primary);
 }
 
 .activity-action {
-  color: #fff;
+  color: var(--text-primary);
 }
 
 .activity-item-name {
   font-style: italic;
-  color: #aaa;
+  color: var(--text-muted);
 }
 
 .activity-id {
-  color: #666;
+  color: var(--text-disabled);
   font-size: 12px;
 }
 
 .no-activity {
-  color: #888;
+  color: var(--text-secondary);
   text-align: center;
   padding: 20px;
 }
-  
