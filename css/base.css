@@ -14,6 +14,7 @@ body {
 .main-container {
   display: grid;
   grid-template-columns: 390px 1fr;
+  grid-template-rows: auto 300px;
   grid-template-areas:
     "sidebar main"
     "activity activity";

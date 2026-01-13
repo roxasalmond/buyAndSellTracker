@@ -38,6 +38,7 @@
 #fundsTableBody td,
 #remitsTableBody td {
   font-weight: 500;
+  
 }
 
 .income {
@@ -146,6 +147,18 @@ button[onclick*="deleteTransaction"]:hover {
 }
 
 /* Table Structure */
+
+.table-wrapper {
+  max-height: 810px;
+  overflow-y: auto;
+}
+
+.transaction-table thead {
+  position: sticky;
+  top: 0;
+  background-color: var(--bg-content);
+}
+
 table {
   border-spacing: 0 10px !important;
   border-collapse: separate;
@@ -158,6 +171,7 @@ table {
 .transaction-table {
   width: 100%;
   table-layout: auto;
+  
 }
 
 .transaction-table tbody tr {

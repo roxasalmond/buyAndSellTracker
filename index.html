@@ -142,7 +142,7 @@
         <!-- History Tab Buttons -->
         <div class="history-tabs">
           <button type="button" class="history-tab-btn active" data-tab="units">
-            Units
+            Available Units
           </button>
           <button type="button" class="history-tab-btn" data-tab="funds">
             Funds
@@ -150,55 +150,87 @@
           <button type="button" class="history-tab-btn" data-tab="remits">
             Remits
           </button>
+          <button type="button" class="history-tab-btn" data-tab="sold">
+            Sold Units
+          </button>
         </div>
 
         <div id="unitsTable" class="transaction-section active">
-          <table class="transaction-table">
-            <thead>
-              <tr>
-                <th>Transaction ID</th>
-                <th>Unit Name</th>
-                <th>IMEI</th>
-                <th>Condition</th>
-                <th>Date</th>
-                <th>Cost</th>
-                <th>Sold For</th>
-                <th>Status</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody id="units-body"></tbody>
-          </table>
+          <div class="table-wrapper">
+            <table class="transaction-table">
+              <thead>
+                <tr>
+                  <th>Transaction ID</th>
+                  <th>Unit Name</th>
+                  <th>IMEI</th>
+                  <th>Condition</th>
+                  <th>Date</th>
+                  <th>Cost</th>
+                  <th>Sold For</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="units-body"></tbody>
+            </table>
+          </div>
         </div>
 
         <div id="fundsTable" class="transaction-section">
-          <table class="transaction-table">
-            <thead>
-              <tr>
-                <th>Transaction ID</th>
-                <th>Date</th>
-                <th>Amount</th>
-                <th>Description</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody id="funds-body"></tbody>
-          </table>
+          <div class="table-wrapper">
+            <table class="transaction-table">
+              <thead>
+                <tr>
+                  <th>Transaction ID</th>
+                  <th>Date</th>
+                  <th>Amount</th>
+                  <th>Description</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="funds-body"></tbody>
+            </table>
+          </div>
         </div>
 
         <div id="remitsTable" class="transaction-section">
-          <table class="transaction-table">
-            <thead>
-              <tr>
-                <th>Transaction ID</th>
-                <th>Date</th>
-                <th>Amount</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody id="remits-body"></tbody>
-          </table>
+          <div class="table-wrapper">
+            <table class="transaction-table">
+              <thead>
+                <tr>
+                  <th>Transaction ID</th>
+                  <th>Date</th>
+                  <th>Amount</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="remits-body"></tbody>
+            </table>
+          </div>
         </div>
+
+        <div id="soldTable" class="transaction-section">
+          <div class="table-wrapper">
+            <table class="transaction-table">
+              <thead>
+                <tr>
+                  <th>Transaction ID</th>
+                  <th>Unit Name</th>
+                  <th>IMEI</th>
+                  <th>Condition</th>
+                  <th>Date Purchased</th>
+                  <th>Date Sold</th>
+                  <th>Cost</th>
+                  <th>Sold For</th>
+                  <th>Profit</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="sold-body"></tbody>
+            </table>
+          </div>
+        </div>
+
       </div>
     </div>
 

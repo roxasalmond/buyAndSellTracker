@@ -46,6 +46,7 @@ formButtons.forEach((button) => {
 });
 
 // History tab switching logic
+// History tab switching logic
 const historyTabButtons = document.querySelectorAll(".history-tab-btn");
 const transactionSections = document.querySelectorAll(".transaction-section");
 
@@ -59,6 +60,15 @@ historyTabButtons.forEach((button) => {
     transactionSections.forEach((section) =>
       section.classList.remove("active")
     );
-    document.getElementById(`${tabType}Table`).classList.add("active");
+    
+    // Map tab to correct table ID
+    const tableMap = {
+      'units': 'unitsTable',
+      'sold': 'soldTable',
+      'funds': 'fundsTable',
+      'remits': 'remitsTable'
+    };
+    
+    document.getElementById(tableMap[tabType]).classList.add("active");
   });
 });
