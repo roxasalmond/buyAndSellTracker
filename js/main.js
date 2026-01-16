@@ -64,6 +64,7 @@ historyTabButtons.forEach((button) => {
     // Map tab to correct table ID
     const tableMap = {
       'units': 'unitsTable',
+      'installment': 'installmentTable',
       'sold': 'soldTable',
       'funds': 'fundsTable',
       'remits': 'remitsTable'

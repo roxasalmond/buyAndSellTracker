@@ -84,6 +84,9 @@
           <button type="button" class="form-btn active" data-form="unit">
             Add Unit
           </button>
+          <button type="button" class="form-btn" data-form="installment">
+            Installment
+          </button>
           <button type="button" class="form-btn" data-form="fund">
             Add Fund
           </button>
@@ -112,6 +115,26 @@
             <input type="date" id="unitDate" required />
             <input type="number" id="unitAmount" placeholder="Cost" step="0.01" required />
             <button type="submit">Add Unit</button>
+          </form>
+        </div>
+
+        <!-- Installment Form -->
+        <div id="installmentFormSection" class="form-section">
+          <form id="installmentForm">
+            <select id="installmentUnit" required>
+              <option value="">Choose a unit...</option>
+            </select>
+            <input type="text" id="buyerName" placeholder="Buyer Name" required />
+            <input type="number" id="totalPrice" placeholder="Installment Price" step="0.01" required />
+            <input type="number" id="downPayment" placeholder="Down Payment" step="0.01" required />
+            <select id="paymentFrequency" required>
+  <option value="">Payment Frequency...</option>
+  <option value="monthly">Monthly</option>
+  <option value="weekly">Weekly</option>
+</select>
+<input type="number" id="paymentAmount" placeholder="Payment Amount" step="0.01" required />
+            <input type="date" id="nextDueDate" required />
+            <button type="submit">Create Installment</button>
           </form>
         </div>
 
@@ -144,6 +167,9 @@
           <button type="button" class="history-tab-btn active" data-tab="units">
             Available Units
           </button>
+          <button type="button" class="history-tab-btn" data-tab="installment">
+            Installments
+          </button>
           <button type="button" class="history-tab-btn" data-tab="funds">
             Funds
           </button>
@@ -174,6 +200,28 @@
               <tbody id="units-body"></tbody>
             </table>
           </div>
+        </div>
+
+        <!-- Installment Table -->
+        <div id="installmentTable" class="transaction-section">
+          <table class="transaction-table">
+            <thead>
+              <tr>
+                <th>Transaction ID</th>
+                <th>Unit Name</th>
+                <th>Buyer Name</th>
+                <th>Unit Cost</th>
+                <th>Installment Price</th>
+                <th>Down Payment</th>
+                <th>Payment</th>
+                <th>Balance</th>
+                <th>Next Due Date</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="installment-body"></tbody>
+          </table>
         </div>
 
         <div id="fundsTable" class="transaction-section">
@@ -230,6 +278,7 @@
             </table>
           </div>
         </div>
+        
 
       </div>
     </div>
@@ -339,6 +388,7 @@
   <script src="js/activity.js"></script>   <!-- 5. Activity logging -->
   <script src="js/forms.js"></script>      <!-- 6. Form handling -->
   <script src="js/edit.js"></script>       <!-- 7. Edit modal -->
+  <script src="js/installment.js"></script> <!-- 7. Installment logic -->
   <script src="js/main.js"></script>       <!-- 8. Main initialization (LAST) -->
 </body>
 </html>

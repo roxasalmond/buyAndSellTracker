@@ -21,6 +21,7 @@ function updateSummary(transactions) {
           // Unsold units: add to inventory, subtract cost from fund
           totalInventoryValue += transaction.cost || 0;
         }
+        // REMOVED: installment units from inventory since they're sold
       } else if (
         transaction.type === "fund" ||
         transaction.type === "fund-return"
@@ -33,9 +34,8 @@ function updateSummary(transactions) {
       } else if (transaction.type === "income") {
         totalIncome += transaction.profit || 0;
         totalDivided += transaction.dividedAmount || 0;
-        // Return cost + half the profit to fund
-        // totalFund += (transaction.cost || 0) + ((transaction.profit || 0) / 2);
       }
+      // REMOVED: installment payment counting - now handled by fund-return transactions
     });
   }
 

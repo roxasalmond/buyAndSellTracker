@@ -4,6 +4,8 @@ function renderTransactionsByType(transactions) {
   const fundsBody = document.getElementById("funds-body");
   const remitsBody = document.getElementById("remits-body");
   const soldBody = document.getElementById("sold-body");
+  const installmentBody = document.getElementById("installment-body");
+    installmentBody.innerHTML = "";
 
   // Clear all tables
   unitsBody.innerHTML = "";
@@ -154,6 +156,124 @@ transactionsArray.forEach((transaction) => {
     unitsBody.appendChild(row);
   }
   // ========== UNITS SECTION END ==========
+
+  // ========== INSTALLMENT SECTION START ==========
+else if (transaction.type === "installment") {
+  const row = document.createElement("tr");
+
+  if (transaction.deleted) {
+    row.classList.add("deleted-row");
+  }
+
+  const transactionIdCell = document.createElement("td");
+  transactionIdCell.setAttribute("data-label", "Transaction ID");
+  transactionIdCell.textContent = transaction.transactionId || "N/A";
+
+  const nameCell = document.createElement("td");
+  nameCell.setAttribute("data-label", "Unit Name");
+  nameCell.textContent = transaction.unitName;
+
+  const buyerCell = document.createElement("td");
+  buyerCell.setAttribute("data-label", "Buyer Name");
+  buyerCell.textContent = transaction.buyerName;
+
+  const unitCostCell = document.createElement("td");
+  unitCostCell.setAttribute("data-label", "Unit Cost");
+  unitCostCell.textContent = `₱${(transaction.originalCost || 0).toFixed(2)}`;
+
+  const totalPriceCell = document.createElement("td");
+  totalPriceCell.setAttribute("data-label", "Installment Price");
+  totalPriceCell.textContent = `₱${(transaction.totalPrice || 0).toFixed(2)}`;
+
+  const downPaymentCell = document.createElement("td");
+  downPaymentCell.setAttribute("data-label", "Down Payment");
+  downPaymentCell.textContent = `₱${(transaction.downPayment || 0).toFixed(2)}`;
+
+  const paymentCell = document.createElement("td");
+  paymentCell.setAttribute("data-label", "Payment");
+  paymentCell.textContent = `₱${(transaction.paymentAmount || 0).toFixed(2)} (${transaction.paymentFrequency || 'monthly'})`;
+
+  const balanceCell = document.createElement("td");
+  balanceCell.setAttribute("data-label", "Balance");
+  balanceCell.classList.add(transaction.balanceRemaining > 0 ? "expense" : "income");
+  balanceCell.textContent = `₱${(transaction.balanceRemaining || 0).toFixed(2)}`;
+
+  const dueDateCell = document.createElement("td");
+  dueDateCell.setAttribute("data-label", "Next Due Date");
+  dueDateCell.textContent = transaction.nextDueDate || "N/A";
+
+  const statusCell = document.createElement("td");
+  statusCell.setAttribute("data-label", "Status");
+  const statusBadge = document.createElement("span");
+  statusBadge.classList.add("status-badge");
+  
+  if (transaction.status === 'completed') {
+    statusBadge.classList.add("status-sold");
+    statusBadge.textContent = "Completed";
+  } else if (transaction.status === 'overdue') {
+    statusBadge.classList.add("status-overdue");
+    statusBadge.textContent = "Overdue";
+  } else {
+    statusBadge.classList.add("status-in-stock");
+    statusBadge.textContent = "Active";
+  }
+  statusCell.appendChild(statusBadge);
+
+  const actionCell = document.createElement("td");
+  actionCell.setAttribute("data-label", "Action");
+
+  const paymentBtn = document.createElement("button");
+  paymentBtn.classList.add("sell-btn");
+  paymentBtn.textContent = "+ Payment";
+  paymentBtn.onclick = () => recordPayment(transaction.id);
+
+  const historyBtn = document.createElement("button");
+  historyBtn.classList.add("edit-btn");
+  historyBtn.textContent = "History";
+  historyBtn.onclick = () => viewPaymentHistory(transaction.id);
+
+  const deleteBtn = document.createElement("button");
+  deleteBtn.classList.add("delete-btn");
+  deleteBtn.textContent = "Delete";
+  deleteBtn.onclick = async () => {
+    if (confirm("Are you sure you want to delete this installment?")) {
+      await database.ref(`transactions/${transaction.id}`).update({
+        deleted: true,
+        deletedAt: Date.now(),
+        deletedBy: auth.currentUser.email,
+      });
+      
+      // Return unit to in-stock
+      if (transaction.unitId) {
+        await database.ref(`transactions/${transaction.unitId}`).update({
+          status: 'in-stock',
+          installmentId: null
+        });
+      }
+    }
+  };
+
+  if (transaction.status !== 'completed') {
+    actionCell.appendChild(paymentBtn);
+  }
+  actionCell.appendChild(historyBtn);
+  actionCell.appendChild(deleteBtn);
+
+  row.appendChild(transactionIdCell);
+  row.appendChild(nameCell);
+  row.appendChild(buyerCell);
+  row.appendChild(unitCostCell);
+  row.appendChild(totalPriceCell);
+  row.appendChild(downPaymentCell);
+  row.appendChild(paymentCell);
+  row.appendChild(balanceCell);
+  row.appendChild(dueDateCell);
+  row.appendChild(statusCell);
+  row.appendChild(actionCell);
+
+  installmentBody.appendChild(row);
+}
+// ========== INSTALLMENT SECTION END ==========
 
   // ========== SOLD UNITS SECTION START ==========
   else if (transaction.type === "unit" && transaction.status === "sold") {
