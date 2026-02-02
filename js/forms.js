@@ -86,7 +86,7 @@ document.getElementById("unitForm").addEventListener("submit", async (e) => {
 
 // Upload photo to Cloudinary
 async function uploadUnitPhoto(file) {
-  const cloudName = 'dxf5ganrz';
+  const cloudName = 'dxf5gsnrz';
   const uploadPreset = 'unitphotos';
   
   const formData = new FormData();
@@ -123,7 +123,7 @@ async function uploadPhotoForUnit(unitId, file, buttonElement) {
     buttonElement.style.pointerEvents = "none";
     
     // Upload to Cloudinary
-    const cloudName = 'dxf5ganrz';
+    const cloudName = 'dxf5gsnrz';
     const uploadPreset = 'unitphotos';
     
     const formData = new FormData();
