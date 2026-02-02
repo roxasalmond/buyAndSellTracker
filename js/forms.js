@@ -84,21 +84,32 @@ document.getElementById("unitForm").addEventListener("submit", async (e) => {
   }
 });
 
-// Upload photo to Firebase Storage
+// Upload photo to Cloudinary
 async function uploadUnitPhoto(file) {
-  const timestamp = Date.now();
-  const fileName = `units/${timestamp}_${file.name}`;
-  const storageRef = firebase.storage().ref(fileName);
+  const cloudName = 'dxf5ganrz';
+  const uploadPreset = 'unitphotos';
   
-  // Upload file
-  await storageRef.put(file);
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('upload_preset', uploadPreset);
   
-  // Get download URL
-  const downloadURL = await storageRef.getDownloadURL();
-  return downloadURL;
+  const response = await fetch(
+    `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+    {
+      method: 'POST',
+      body: formData
+    }
+  );
+  
+  if (!response.ok) {
+    throw new Error('Failed to upload image to Cloudinary');
+  }
+  
+  const data = await response.json();
+  return data.secure_url; // Return the image URL
 }
 
-// Upload photo for existing unit (NEW - add this function here)
+// Upload photo for existing unit (using Cloudinary)
 async function uploadPhotoForUnit(unitId, file, buttonElement) {
   try {
     // Show loading state
@@ -111,13 +122,30 @@ async function uploadPhotoForUnit(unitId, file, buttonElement) {
     `;
     buttonElement.style.pointerEvents = "none";
     
-    // Upload to Firebase Storage
-    const timestamp = Date.now();
-    const fileName = `units/${timestamp}_${file.name}`;
-    const storageRef = firebase.storage().ref(fileName);
+    // Upload to Cloudinary
+    const cloudName = 'dxf5ganrz';
+    const uploadPreset = 'unitphotos';
     
-    await storageRef.put(file);
-    const downloadURL = await storageRef.getDownloadURL();
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', uploadPreset);
+    
+    const response = await fetch(
+      `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+      {
+        method: 'POST',
+        body: formData
+      }
+    );
+    
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error('Cloudinary error:', errorData);
+      throw new Error('Failed to upload image');
+    }
+    
+    const data = await response.json();
+    const downloadURL = data.secure_url;
     
     // Update unit record with photo URL
     await database.ref(`transactions/${unitId}`).update({
@@ -138,26 +166,6 @@ async function uploadPhotoForUnit(unitId, file, buttonElement) {
     buttonElement.style.pointerEvents = "auto";
   }
 }
-
-// Photo preview functionality
-document.getElementById("unitPhoto")?.addEventListener("change", function(e) {
-  const file = e.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      document.getElementById("previewImage").src = e.target.result;
-      document.getElementById("photoPreview").style.display = "block";
-    };
-    reader.readAsDataURL(file);
-  }
-});
-
-// Remove photo functionality
-document.getElementById("removePhoto")?.addEventListener("click", function() {
-  document.getElementById("unitPhoto").value = "";
-  document.getElementById("photoPreview").style.display = "none";
-  document.getElementById("previewImage").src = "";
-});
 
 // Handle Fund Form submission
 document.getElementById("fundForm").addEventListener("submit", async (e) => {
