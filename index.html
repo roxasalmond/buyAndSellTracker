@@ -15,6 +15,7 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
 
   <script>
     // Firebase configuration
@@ -100,7 +101,7 @@
           <form id="unitForm">
             <input type="text" id="unitName" placeholder="Unit Name" required />
             <select id="unitCategory" required>
-              <option value="" disabled selected>Android, IOS, Laptop</option>
+              <option value="" disabled selected>Android, IOS, Laptop/Desktop</option>
               <option value="Android">Android</option>
               <option value="IOS">iOS</option>
               <option value="Laptop">Laptop</option>
@@ -114,6 +115,20 @@
             </select>
             <input type="date" id="unitDate" required />
             <input type="number" id="unitAmount" placeholder="Cost" step="0.01" required />
+            <input type="number" id="suggestedPrice" placeholder="Suggested Selling Price" step="0.01" required />
+
+            <!-- Photo Upload Section -->
+            <div class="photo-upload-container">
+              <label for="unitPhoto" class="photo-upload-label">
+                <span>Upload Photo *</span>
+              </label>
+              <input type="file" id="unitPhoto" accept="image/*" required />
+              <div id="photoPreview" class="photo-preview" style="display: none;">
+                <img id="previewImage" src="" alt="Preview" />
+                <button type="button" id="removePhoto" class="remove-photo-btn">Remove</button>
+              </div>
+            </div>
+
             <button type="submit">Add Unit</button>
           </form>
         </div>
@@ -128,11 +143,11 @@
             <input type="number" id="totalPrice" placeholder="Installment Price" step="0.01" required />
             <input type="number" id="downPayment" placeholder="Down Payment" step="0.01" required />
             <select id="paymentFrequency" required>
-  <option value="">Payment Frequency...</option>
-  <option value="monthly">Monthly</option>
-  <option value="weekly">Weekly</option>
-</select>
-<input type="number" id="paymentAmount" placeholder="Payment Amount" step="0.01" required />
+              <option value="">Payment Frequency...</option>
+              <option value="monthly">Monthly</option>
+              <option value="weekly">Weekly</option>
+            </select>
+            <input type="number" id="paymentAmount" placeholder="Payment Amount" step="0.01" required />
             <input type="date" id="nextDueDate" required />
             <button type="submit">Create Installment</button>
           </form>
@@ -195,6 +210,7 @@
                   <th>Sold For</th>
                   <th>Status</th>
                   <th>Action</th>
+                  <th>Photo</th>
                 </tr>
               </thead>
               <tbody id="units-body"></tbody>
@@ -278,7 +294,7 @@
             </table>
           </div>
         </div>
-        
+
 
       </div>
     </div>
@@ -381,14 +397,15 @@
     </div>
   </div>
   <!-- Load scripts in dependency order -->
-  <script src="js/utils.js"></script>      <!-- 1. Utilities first (used by others) -->
-  <script src="js/summary.js"></script>    <!-- 2. Summary calculations -->
-  <script src="js/sellUnit.js"></script>   <!-- 3. Sell unit logic -->
-  <script src="js/rendering.js"></script>  <!-- 4. Rendering functions -->
-  <script src="js/activity.js"></script>   <!-- 5. Activity logging -->
-  <script src="js/forms.js"></script>      <!-- 6. Form handling -->
-  <script src="js/edit.js"></script>       <!-- 7. Edit modal -->
+  <script src="js/utils.js"></script> <!-- 1. Utilities first (used by others) -->
+  <script src="js/summary.js"></script> <!-- 2. Summary calculations -->
+  <script src="js/sellUnit.js"></script> <!-- 3. Sell unit logic -->
+  <script src="js/rendering.js"></script> <!-- 4. Rendering functions -->
+  <script src="js/activity.js"></script> <!-- 5. Activity logging -->
+  <script src="js/forms.js"></script> <!-- 6. Form handling -->
+  <script src="js/edit.js"></script> <!-- 7. Edit modal -->
   <script src="js/installment.js"></script> <!-- 7. Installment logic -->
-  <script src="js/main.js"></script>       <!-- 8. Main initialization (LAST) -->
+  <script src="js/main.js"></script> <!-- 8. Main initialization (LAST) -->
 </body>
+
 </html>

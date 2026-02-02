@@ -294,3 +294,61 @@
 .save-btn {
   flex: 1;
 }
+
+/* Photo Upload Styling */
+.photo-upload-container {
+  margin: 15px 0;
+}
+
+.photo-upload-label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #333;
+}
+
+.photo-upload-label span::after {
+  content: " *";
+  color: #ff4444;
+}
+
+#unitPhoto {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  border: 2px dashed #ddd;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: border-color 0.3s;
+}
+
+#unitPhoto:hover {
+  border-color: #4CAF50;
+}
+
+.photo-preview {
+  margin-top: 15px;
+  text-align: center;
+}
+
+.photo-preview img {
+  max-width: 300px;
+  max-height: 300px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.remove-photo-btn {
+  margin-top: 10px;
+  padding: 8px 16px;
+  background-color: #ff4444;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.remove-photo-btn:hover {
+  background-color: #cc0000;
+}

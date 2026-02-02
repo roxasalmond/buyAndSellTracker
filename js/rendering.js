@@ -69,7 +69,7 @@ transactionsArray.forEach((transaction) => {
     statusBadge.textContent = "In Stock";
     statusCell.appendChild(statusBadge);
 
-    // Sold For cell with input + Sell button
+    // Sold For cell with input + Sell button (with suggested price as placeholder)
     const soldCell = document.createElement("td");
     soldCell.setAttribute("data-label", "Sold For");
     
@@ -82,7 +82,9 @@ transactionsArray.forEach((transaction) => {
     soldInput.type = "number";
     soldInput.classList.add("sold-input");
     soldInput.id = `sold-${transaction.id}`;
-    soldInput.placeholder = "₱ 0.00";
+    soldInput.placeholder = transaction.suggestedPrice 
+      ? `₱${transaction.suggestedPrice.toFixed(2)}` 
+      : "₱ 0.00";
     soldInput.step = "0.01";
 
     const sellBtn = document.createElement("button");
@@ -143,6 +145,52 @@ transactionsArray.forEach((transaction) => {
     actionCell.appendChild(deleteBtn);
     actionCell.appendChild(restoreBtn);
 
+    // Photo cell (NEW)
+    const photoCell = document.createElement("td");
+    photoCell.setAttribute("data-label", "Photo");
+
+    if (transaction.photoURL) {
+      const photoThumbnail = document.createElement("img");
+      photoThumbnail.src = transaction.photoURL;
+      photoThumbnail.alt = transaction.name;
+      photoThumbnail.classList.add("unit-photo-thumbnail");
+      photoThumbnail.onclick = () => openPhotoModal(transaction.photoURL, transaction.name);
+      photoCell.appendChild(photoThumbnail);
+    } else {
+      // Create file input for uploading photo
+      const uploadContainer = document.createElement("div");
+      uploadContainer.classList.add("photo-upload-cell");
+      
+      const fileInput = document.createElement("input");
+      fileInput.type = "file";
+      fileInput.accept = "image/*";
+      fileInput.classList.add("photo-upload-input");
+      fileInput.id = `photo-upload-${transaction.id}`;
+      
+      const uploadLabel = document.createElement("label");
+      uploadLabel.setAttribute("for", `photo-upload-${transaction.id}`);
+      uploadLabel.classList.add("photo-upload-btn");
+      uploadLabel.innerHTML = `
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <polyline points="17 8 12 3 7 8"></polyline>
+          <line x1="12" y1="3" x2="12" y2="15"></line>
+        </svg>
+        <span>Upload</span>
+      `;
+      
+      fileInput.onchange = async (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          await uploadPhotoForUnit(transaction.id, file, uploadLabel);
+        }
+      };
+      
+      uploadContainer.appendChild(fileInput);
+      uploadContainer.appendChild(uploadLabel);
+      photoCell.appendChild(uploadContainer);
+    }
+
     row.appendChild(transactionIdCell);
     row.appendChild(nameCell);
     row.appendChild(imeiCell);
@@ -152,6 +200,7 @@ transactionsArray.forEach((transaction) => {
     row.appendChild(soldCell);
     row.appendChild(statusCell);
     row.appendChild(actionCell);
+    row.appendChild(photoCell);
 
     unitsBody.appendChild(row);
   }

@@ -73,3 +73,40 @@ historyTabButtons.forEach((button) => {
     document.getElementById(tableMap[tabType]).classList.add("active");
   });
 });
+
+
+// Open photo modal to view full-size image
+function openPhotoModal(photoURL, unitName) {
+  // Create modal overlay
+  const modal = document.createElement("div");
+  modal.classList.add("photo-modal");
+  modal.onclick = () => document.body.removeChild(modal);
+  
+  // Create modal content
+  const modalContent = document.createElement("div");
+  modalContent.classList.add("photo-modal-content");
+  modalContent.onclick = (e) => e.stopPropagation(); // Prevent closing when clicking image
+  
+  // Create close button
+  const closeBtn = document.createElement("button");
+  closeBtn.classList.add("photo-modal-close");
+  closeBtn.innerHTML = "&times;";
+  closeBtn.onclick = () => document.body.removeChild(modal);
+  
+  // Create image
+  const img = document.createElement("img");
+  img.src = photoURL;
+  img.alt = unitName;
+  img.classList.add("photo-modal-image");
+  
+  // Create caption
+  const caption = document.createElement("p");
+  caption.classList.add("photo-modal-caption");
+  caption.textContent = unitName;
+  
+  modalContent.appendChild(closeBtn);
+  modalContent.appendChild(img);
+  modalContent.appendChild(caption);
+  modal.appendChild(modalContent);
+  document.body.appendChild(modal);
+}

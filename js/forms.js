@@ -3,27 +3,46 @@ document.getElementById("unitForm").addEventListener("submit", async (e) => {
   e.preventDefault();
 
   const cost = parseFloat(document.getElementById("unitAmount").value);
+  const suggestedPrice = parseFloat(document.getElementById("suggestedPrice").value);
+  const photoFile = document.getElementById("unitPhoto").files[0];
 
-  // Generate transaction ID for unit
-  const transactionId = await getNextTransactionId();
-
-  const unitData = {
-    type: "unit",
-    transactionId: transactionId,
-    name: document.getElementById("unitName").value,
-    category: document.getElementById("unitCategory").value,
-    imei: document.getElementById("unitImei").value,
-    condition: document.getElementById("unitCondition").value,
-    date: document.getElementById("unitDate").value,
-    cost: cost,
-    soldFor: null,
-    status: "in-stock",
-    createdBy: auth.currentUser.email,
-    createdAt: Date.now(), 
-    timestamp: Date.now(),
-  };
+  // Validate photo
+  if (!photoFile) {
+    alert("Please upload a photo of the unit");
+    return;
+  }
 
   try {
+    // Show loading state
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    const originalText = submitBtn.textContent;
+    submitBtn.textContent = "Uploading...";
+    submitBtn.disabled = true;
+
+    // Upload photo to Firebase Storage
+    const photoURL = await uploadUnitPhoto(photoFile);
+
+    // Generate transaction ID for unit
+    const transactionId = await getNextTransactionId();
+
+    const unitData = {
+      type: "unit",
+      transactionId: transactionId,
+      name: document.getElementById("unitName").value,
+      category: document.getElementById("unitCategory").value,
+      imei: document.getElementById("unitImei").value,
+      condition: document.getElementById("unitCondition").value,
+      date: document.getElementById("unitDate").value,
+      cost: cost,
+      suggestedPrice: suggestedPrice, // NEW: Store suggested selling price
+      photoURL: photoURL, // NEW: Store photo URL
+      soldFor: null,
+      status: "in-stock",
+      createdBy: auth.currentUser.email,
+      createdAt: Date.now(), 
+      timestamp: Date.now(),
+    };
+
     // Add the unit and GET ITS ID
     const unitRef = await database.ref("transactions").push(unitData);
     const unitId = unitRef.key;
@@ -31,9 +50,9 @@ document.getElementById("unitForm").addEventListener("submit", async (e) => {
     // Generate transaction ID for expense
     const expenseTransactionId = await getNextTransactionId();
 
-    // Create an EXPENSE transaction (not remit!)
+    // Create an EXPENSE transaction
     const expenseData = {
-      type: "expense", // Changed from "remit"
+      type: "expense",
       transactionId: expenseTransactionId,
       unitId: unitId,
       date: document.getElementById("unitDate").value,
@@ -45,12 +64,99 @@ document.getElementById("unitForm").addEventListener("submit", async (e) => {
     };
     await database.ref("transactions").push(expenseData);
 
+    // Reset form and preview
     e.target.reset();
+    document.getElementById("photoPreview").style.display = "none";
+    
+    // Restore button
+    submitBtn.textContent = originalText;
+    submitBtn.disabled = false;
+    
     alert("Unit added successfully! Fund deducted.");
   } catch (error) {
     console.error("Error adding unit:", error);
-    alert("Failed to add unit");
+    alert("Failed to add unit: " + error.message);
+    
+    // Restore button on error
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    submitBtn.textContent = "Add Unit";
+    submitBtn.disabled = false;
   }
+});
+
+// Upload photo to Firebase Storage
+async function uploadUnitPhoto(file) {
+  const timestamp = Date.now();
+  const fileName = `units/${timestamp}_${file.name}`;
+  const storageRef = firebase.storage().ref(fileName);
+  
+  // Upload file
+  await storageRef.put(file);
+  
+  // Get download URL
+  const downloadURL = await storageRef.getDownloadURL();
+  return downloadURL;
+}
+
+// Upload photo for existing unit (NEW - add this function here)
+async function uploadPhotoForUnit(unitId, file, buttonElement) {
+  try {
+    // Show loading state
+    const originalHTML = buttonElement.innerHTML;
+    buttonElement.innerHTML = `
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"></circle>
+      </svg>
+      <span>Uploading...</span>
+    `;
+    buttonElement.style.pointerEvents = "none";
+    
+    // Upload to Firebase Storage
+    const timestamp = Date.now();
+    const fileName = `units/${timestamp}_${file.name}`;
+    const storageRef = firebase.storage().ref(fileName);
+    
+    await storageRef.put(file);
+    const downloadURL = await storageRef.getDownloadURL();
+    
+    // Update unit record with photo URL
+    await database.ref(`transactions/${unitId}`).update({
+      photoURL: downloadURL,
+      photoUploadedAt: Date.now()
+    });
+    
+    alert("Photo uploaded successfully!");
+    
+    // The listener will automatically refresh the table
+    
+  } catch (error) {
+    console.error("Error uploading photo:", error);
+    alert("Failed to upload photo: " + error.message);
+    
+    // Restore button
+    buttonElement.innerHTML = originalHTML;
+    buttonElement.style.pointerEvents = "auto";
+  }
+}
+
+// Photo preview functionality
+document.getElementById("unitPhoto")?.addEventListener("change", function(e) {
+  const file = e.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      document.getElementById("previewImage").src = e.target.result;
+      document.getElementById("photoPreview").style.display = "block";
+    };
+    reader.readAsDataURL(file);
+  }
+});
+
+// Remove photo functionality
+document.getElementById("removePhoto")?.addEventListener("click", function() {
+  document.getElementById("unitPhoto").value = "";
+  document.getElementById("photoPreview").style.display = "none";
+  document.getElementById("previewImage").src = "";
 });
 
 // Handle Fund Form submission
@@ -62,7 +168,7 @@ document.getElementById("fundForm").addEventListener("submit", async (e) => {
 
   const fundData = {
     type: "fund",
-    transactionId: transactionId, // ADD THIS
+    transactionId: transactionId,
     date: document.getElementById("fundDate").value,
     amount: parseFloat(document.getElementById("fundAmount").value),
     createdBy: auth.currentUser.email,
@@ -89,7 +195,7 @@ document.getElementById("remitForm").addEventListener("submit", async (e) => {
 
   const remitData = {
     type: "remit",
-    transactionId: transactionId, // ADD THIS
+    transactionId: transactionId,
     date: document.getElementById("remitDate").value,
     amount: parseFloat(document.getElementById("remitAmount").value),
     createdBy: auth.currentUser.email,
