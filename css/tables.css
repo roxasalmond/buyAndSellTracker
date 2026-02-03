@@ -149,7 +149,7 @@ button[onclick*="deleteTransaction"]:hover {
 /* Table Structure */
 
 .table-wrapper {
-  max-height: 990px;
+  max-height: 925px;
   overflow-y: auto;
 }
 
