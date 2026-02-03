@@ -24,6 +24,7 @@ function openEditModal(transactionId, transaction) {
       transaction.condition || "";
     document.getElementById("editUnitDate").value = transaction.date || "";
     document.getElementById("editUnitCost").value = transaction.cost || 0;
+    document.getElementById("editSuggestedPrice").value = transaction.suggestedPrice || '';
     document.getElementById('editUnitSold').value = transaction.soldFor || '';
   } else if (
     transaction.type === "fund" ||
@@ -75,6 +76,7 @@ async function saveEdit(e) {
     updateData.condition = document.getElementById('editUnitCondition').value;
     updateData.date = document.getElementById('editUnitDate').value;
     updateData.cost = parseFloat(document.getElementById('editUnitCost').value);
+    updateData.suggestedPrice = parseFloat(document.getElementById('editSuggestedPrice').value) || 0;
 
     const soldValue = document.getElementById('editUnitSold').value;
     updateData.status = soldValue ? 'sold' : 'in-stock';
