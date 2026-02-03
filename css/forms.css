@@ -9,19 +9,19 @@
 /* ==================== FORM TYPE SELECTOR ==================== */
 .form-type-selector {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   margin-bottom: 25px;
 }
 
 .form-btn {
   flex: 1;
-  padding: 10px 15px;
+  padding: 12px 10px;
   background-color: var(--bg-primary);
   color: var(--text-secondary);
   border: 1px solid var(--border-color);
   border-radius: 8px;
   cursor: pointer;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 500;
   transition: all 0.3s ease;
 }
@@ -157,7 +157,7 @@
 
 .form-group label {
   display: block;
-  font-size: 13px;
+  font-size: 12px;
   color: var(--text-secondary);
   margin-bottom: 8px;
   font-weight: 500;

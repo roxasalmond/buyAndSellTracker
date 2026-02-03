@@ -301,6 +301,48 @@ table {
   color: #333;
 }
 
+/* Photo Upload Cell */
+.photo-upload-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.photo-upload-input {
+  display: none;
+}
+
+.photo-upload-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background-color: var(--accent-primary);
+  color: var(--accent-dark);
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  transition: all var(--transition-normal);
+  white-space: nowrap;
+  user-select: none;
+}
+
+.photo-upload-btn:hover {
+  background-color: var(--accent-hover);
+}
+
+.photo-upload-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+.transaction-table td[data-label="Action"],
+.transaction-table td[data-label="Status"] {
+  white-space: nowrap;
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;
