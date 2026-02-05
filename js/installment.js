@@ -257,6 +257,23 @@ async function recordPayment(installmentId) {
       lastPaymentDate: new Date().toISOString().split('T')[0]
     });
     
+    // NEW: If completed, update the unit status to 'sold'
+    if (newBalance <= 0 && installment.unitId) {
+      console.log('💰 Installment completed!');
+      console.log('Unit ID:', installment.unitId);
+      console.log('New balance:', newBalance);
+      console.log('Total price:', installment.totalPrice);
+      
+      await database.ref(`transactions/${installment.unitId}`).update({
+        status: 'sold',
+        soldFor: installment.totalPrice,
+        soldDate: new Date().toISOString().split('T')[0],
+        completedAt: Date.now()
+      });
+      
+      console.log('✅ Unit status updated to sold!');
+    }
+    
     // Process payment to create transactions
     const totalProfit = installment.totalPrice - installment.originalCost;
     await processInstallmentPayment(installmentId, paymentAmount, installment.originalCost, totalProfit);

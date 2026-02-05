@@ -187,10 +187,11 @@ table {
 
 /* Table Header */
 .transaction-table thead th {
-  padding: 12px 15px;
+  padding: 10px 15px;
   text-align: left;
   background-color: transparent;
   color: var(--text-on-light);
+  white-space: nowrap;
 }
 
 /* Table Body Cells */
