@@ -1,4 +1,3 @@
-// js/activity.js
 function generateActivityFeed(transactions) {
   if (!transactions) return [];
 

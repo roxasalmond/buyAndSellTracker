@@ -268,6 +268,8 @@ async function recordPayment(installmentId) {
         status: 'sold',
         soldFor: installment.totalPrice,
         soldDate: new Date().toISOString().split('T')[0],
+        soldBy: auth.currentUser.email,
+        soldAt: Date.now(),
         completedAt: Date.now()
       });
       
