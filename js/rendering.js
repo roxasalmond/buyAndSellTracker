@@ -31,7 +31,13 @@ function renderTransactionsByType(transactions) {
 // ========== UNITS SECTION START (IN-STOCK ONLY) ==========
 transactionsArray.forEach((transaction) => {
   // Only show in-stock units
-  if (transaction.type === "unit" && transaction.status !== "sold") {
+  // Units on an installment plan are not available: they are listed in the Installment tab.
+  // (Showing them here with a Sell button is what allowed a unit to be sold twice.)
+  if (
+    transaction.type === "unit" &&
+    transaction.status !== "sold" &&
+    transaction.status !== "installment"
+  ) {
     const row = document.createElement("tr");
 
     if (transaction.deleted) {

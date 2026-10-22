@@ -1,3 +1,6 @@
+/* Units whose sale is being saved right now (blocks double-clicks on Sell) */
+const sellingUnits = new Set();
+
 /* Handle selling a unit */
 async function sellUnit(unitId) {
   // 1. Get sold amount from input
@@ -10,6 +13,9 @@ async function sellUnit(unitId) {
     return;
   }
 
+  if (sellingUnits.has(unitId)) return; // this sale is already being saved
+  sellingUnits.add(unitId);
+
   try {
     // 3. Get unit data from Firebase
     const unitSnapshot = await database
@@ -19,6 +25,25 @@ async function sellUnit(unitId) {
 
     if (!unit) {
       alert("Unit not found");
+      return;
+    }
+
+    // GUARD: only an in-stock unit can be sold. A unit that is already sold, or is on an
+    // installment plan, would otherwise be counted a second time in income and the fund.
+    const status = unit.status || "in-stock";
+    if (unit.deleted) {
+      alert("This unit is deleted. Restore it first.");
+      return;
+    }
+    if (status === "sold") {
+      alert(`This unit is already sold (${unit.transactionId || unitId}). Nothing was recorded.`);
+      return;
+    }
+    if (status === "installment") {
+      alert(
+        `This unit is on an installment plan${unit.installmentId ? ` (${unit.installmentId})` : ""}.\n` +
+          "Record payments in the Installment tab. The unit moves to Sold automatically when it is fully paid."
+      );
       return;
     }
 
@@ -109,5 +134,7 @@ async function sellUnit(unitId) {
   } catch (error) {
     console.error("Error selling unit:", error);
     alert("Failed to record sale");
+  } finally {
+    sellingUnits.delete(unitId);
   }
 }
