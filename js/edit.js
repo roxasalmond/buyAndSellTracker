@@ -70,6 +70,40 @@ async function saveEdit(e) {
   };
   
   if (transactionType === 'unit') {
+    // Units that are on, or were sold through, an installment plan: their money records belong
+    // to the plan. Changing the status, cost or sold price here would overwrite those records,
+    // so only the descriptive fields can be edited.
+    const currentUnit =
+      (await database.ref(`transactions/${transactionId}`).once('value')).val() || {};
+
+    if (currentUnit.status === 'installment' || currentUnit.installmentId) {
+      const costNow = parseFloat(document.getElementById('editUnitCost').value);
+      const soldRaw = document.getElementById('editUnitSold').value;
+      const soldNow = soldRaw ? parseFloat(soldRaw) : null;
+
+      if (costNow !== (currentUnit.cost || 0) || soldNow !== (currentUnit.soldFor ?? null)) {
+        alert(
+          'This unit is on, or was sold through, an installment plan, so its cost and sold price cannot be changed here.\n' +
+            'You can edit the name, category, IMEI, condition, date and suggested price.'
+        );
+        return;
+      }
+
+      await database.ref(`transactions/${transactionId}`).update({
+        name: document.getElementById('editUnitName').value,
+        category: document.getElementById('editUnitCategory').value,
+        imei: document.getElementById('editUnitImei').value,
+        condition: document.getElementById('editUnitCondition').value,
+        date: document.getElementById('editUnitDate').value,
+        suggestedPrice: parseFloat(document.getElementById('editSuggestedPrice').value) || 0,
+        editedBy: auth.currentUser.email,
+        editedAt: Date.now()
+      });
+      closeEditModal();
+      alert('Transaction updated successfully!');
+      return;
+    }
+
     updateData.name = document.getElementById('editUnitName').value;
     updateData.category = document.getElementById('editUnitCategory').value;
     updateData.imei = document.getElementById('editUnitImei').value;
@@ -86,7 +120,13 @@ async function saveEdit(e) {
     await database.ref(`transactions/${transactionId}`).update(updateData);
 
     // If unit is sold, update related income and fund-return transactions
-    if (soldValue) {
+    // Only touch the income / fund-return rows when the cost or sold price really changed.
+    // Fixing a typo in the name must not recalculate money records.
+    const moneyChanged =
+      updateData.cost !== (currentUnit.cost || 0) ||
+      (soldValue ? parseFloat(soldValue) : null) !== (currentUnit.soldFor ?? null);
+
+    if (soldValue && moneyChanged) {
       const soldAmount = parseFloat(soldValue);
       const cost = updateData.cost;
       const profit = soldAmount - cost;
