@@ -1,0 +1,25 @@
+# Database exports and backups: these hold buyer names, IMEIs and money records.
+# Never commit them. Keep exports outside this folder (for example D:\Backups\).
+*-rtdb-export-*.json
+*export*.json
+*backup*.json
+*.csv
+*.xlsx
+*.xls
+
+# Local notes and project docs (not part of the site)
+context-folder/
+structure.txt
+
+# Environment files and secrets
+.env
+.env.*
+*.pem
+serviceAccount*.json
+
+# Editor, OS and tooling noise
+.DS_Store
+Thumbs.db
+node_modules/
+.vercel/
+.firebase/
